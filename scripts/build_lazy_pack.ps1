@@ -316,4 +316,5 @@ Compress-Archive -Path (Join-Path $packRoot "*") -DestinationPath $zipPath -Forc
 
 Write-Host "Lazy pack built:" $packRoot
 Write-Host "Zip:" $zipPath
+exit 0
 
