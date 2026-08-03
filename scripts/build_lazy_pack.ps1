@@ -1,15 +1,20 @@
 ﻿param(
     [string]$OutputRoot = "dist",
-    [string]$PackName = "GodotAIStarterLazyPack"
+    [string]$PackName = "GodotAIStarterLazyPack",
+    [switch]$IncludeGodot,
+    [string]$GodotBin = ""
 )
 
 $ErrorActionPreference = "Stop"
 
 $repoRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
 $outputRootPath = Join-Path $repoRoot $OutputRoot
-$packRoot = Join-Path $outputRootPath $PackName
+$godotVersion = "4.7.1"
+$godotFolderName = "Godot-$godotVersion"
+$packDirectoryName = if ($IncludeGodot) { "$PackName-Godot-$godotVersion-win64" } else { $PackName }
+$packRoot = Join-Path $outputRootPath $packDirectoryName
 $templateRoot = Join-Path $packRoot "template"
-$zipPath = Join-Path $outputRootPath ($PackName + ".zip")
+$zipPath = Join-Path $outputRootPath ($packDirectoryName + ".zip")
 
 if (Test-Path -LiteralPath $packRoot) {
     Remove-Item -Recurse -Force -LiteralPath $packRoot
@@ -21,6 +26,27 @@ if (Test-Path -LiteralPath $zipPath) {
 
 New-Item -ItemType Directory -Force -Path $templateRoot | Out-Null
 Set-Content -LiteralPath (Join-Path $outputRootPath ".gdignore") -Value "" -Encoding UTF8
+
+function Resolve-BundledGodot {
+    param([string]$CandidatePath)
+
+    if (-not $CandidatePath) {
+        $CandidatePath = & (Join-Path $repoRoot "scripts\resolve-godot.ps1")
+    }
+
+    if (-not (Test-Path -LiteralPath $CandidatePath)) {
+        throw "Godot path does not exist: $CandidatePath"
+    }
+
+    $resolvedPath = (Resolve-Path -LiteralPath $CandidatePath).Path
+    $version = & $resolvedPath --version 2>$null
+    $versionText = $version | Select-Object -First 1
+    if ($LASTEXITCODE -ne 0 -or -not ($versionText -and ($versionText.ToString() -match "^4\.7\.1\."))) {
+        throw "Godot 4.7.1 stable is required for the bundled package. Candidate '$resolvedPath' reported: $versionText"
+    }
+
+    return $resolvedPath
+}
 
 $copyItems = @(
     ".claude",
@@ -45,7 +71,7 @@ foreach ($item in $copyItems) {
     }
 }
 
-foreach ($localOnlyDir in @(".git", ".godot", ".tmp", "tools", "dist")) {
+foreach ($localOnlyDir in @(".git", ".godot", ".tmp", "dist")) {
     $path = Join-Path $templateRoot $localOnlyDir
     if (Test-Path -LiteralPath $path) {
         Remove-Item -Recurse -Force -LiteralPath $path
@@ -54,6 +80,34 @@ foreach ($localOnlyDir in @(".git", ".godot", ".tmp", "tools", "dist")) {
 
 Get-ChildItem -LiteralPath $templateRoot -Recurse -Force -Filter "*.uid" |
     Remove-Item -Force
+
+if ($IncludeGodot) {
+    $bundledGodotConsole = Resolve-BundledGodot -CandidatePath $GodotBin
+    $bundledGodotSourceDirectory = Split-Path -Parent $bundledGodotConsole
+    $bundledGodotTargetDirectory = Join-Path $templateRoot (Join-Path "tools" $godotFolderName)
+    New-Item -ItemType Directory -Force -Path $bundledGodotTargetDirectory | Out-Null
+
+    foreach ($engineFile in @(
+        "Godot_v4.7.1-stable_win64.exe",
+        "Godot_v4.7.1-stable_win64_console.exe"
+    )) {
+        $sourceEngineFile = Join-Path $bundledGodotSourceDirectory $engineFile
+        if (-not (Test-Path -LiteralPath $sourceEngineFile)) {
+            throw "Required Godot engine file is missing: $sourceEngineFile"
+        }
+        Copy-Item -LiteralPath $sourceEngineFile -Destination $bundledGodotTargetDirectory -Force
+    }
+
+    $engineHash = (Get-FileHash -LiteralPath (Join-Path $bundledGodotTargetDirectory "Godot_v4.7.1-stable_win64.exe") -Algorithm SHA256).Hash
+    $engineManifest = @"
+Godot version: 4.7.1.stable.official.a13da4feb
+Platform: Windows x64 standard
+Official source: https://github.com/godotengine/godot-builds/releases/tag/4.7.1-stable
+Engine SHA-256: $engineHash
+License: https://github.com/godotengine/godot/blob/4.7.1-stable/LICENSE.txt
+"@
+    Set-Content -LiteralPath (Join-Path $bundledGodotTargetDirectory "ENGINE_MANIFEST.txt") -Value $engineManifest -Encoding UTF8
+}
 
 $installScript = @'
 param(
@@ -144,8 +198,9 @@ function Resolve-SelectedGodot {
 
     $resolvedPath = (Resolve-Path -LiteralPath $CandidatePath).Path
     $version = & $resolvedPath --version 2>$null
-    if ($LASTEXITCODE -ne 0 -or -not (($version | Select-Object -First 1).ToString() -match "^4\.6\.")) {
-        throw "Godot 4.6.x stable is required. Candidate '$resolvedPath' reported: $($version | Select-Object -First 1)"
+    $versionText = $version | Select-Object -First 1
+    if ($LASTEXITCODE -ne 0 -or -not ($versionText -and ($versionText.ToString() -match "^4\.7\.1\."))) {
+        throw "Godot 4.7.1 stable is required. Candidate '$resolvedPath' reported: $versionText"
     }
 
     return $resolvedPath
@@ -190,6 +245,7 @@ $copyItems = @(
     "scenes",
     "scripts",
     "tests",
+    "tools",
     ".gitattributes",
     ".gitignore",
     ".mcp.json",
@@ -214,9 +270,19 @@ $projectText = Get-Content -Raw -Encoding UTF8 -LiteralPath $projectFile
 $projectText = $projectText -replace 'config/name="[^"]+"', ('config/name="' + $ProjectName.Replace('"', '') + '"')
 Set-Content -LiteralPath $projectFile -Value $projectText -Encoding UTF8
 
+$projectGodotBin = $selectedGodotBin
+$templateToolsDirectory = Join-Path $templateRoot "tools"
+if (Test-Path -LiteralPath $templateToolsDirectory) {
+    $resolvedTemplateToolsDirectory = (Resolve-Path -LiteralPath $templateToolsDirectory).Path
+    if ($selectedGodotBin.StartsWith($resolvedTemplateToolsDirectory, [System.StringComparison]::OrdinalIgnoreCase)) {
+        $relativeGodotPath = $selectedGodotBin.Substring($templateRoot.Length).TrimStart("\\")
+        $projectGodotBin = Join-Path $targetRoot $relativeGodotPath
+    }
+}
+
 $toolConfigDirectory = Join-Path $targetRoot "tools"
 New-Item -ItemType Directory -Force -Path $toolConfigDirectory | Out-Null
-Set-Content -LiteralPath (Join-Path $toolConfigDirectory "godot-bin.path") -Value $selectedGodotBin -Encoding UTF8
+Set-Content -LiteralPath (Join-Path $toolConfigDirectory "godot-bin.path") -Value $projectGodotBin -Encoding UTF8
 
 $handoff = @"
 # Session Handoff
@@ -225,7 +291,7 @@ Last updated: $(Get-Date -Format "yyyy-MM-dd")
 
 ## Current State
 
-- New Godot 4.6.x AI-assisted project scaffolded from GodotAIStarterLazyPack.
+- New Godot 4.7.1 AI-assisted project scaffolded from GodotAIStarterLazyPack.
 - Confirmed Godot path is saved locally in ``tools/godot-bin.path`` and is ignored by Git.
 - Godot MCP addon is installed under ``addons/godot_mcp/``.
 - Project MCP config is in ``.mcp.json``.
@@ -262,7 +328,7 @@ try {
 
     Invoke-External git lfs install
 
-    $env:GODOT_BIN = $selectedGodotBin
+    $env:GODOT_BIN = $projectGodotBin
 
     if (-not $SkipVerify) {
         Invoke-External powershell -ExecutionPolicy Bypass -File scripts\verify.ps1
@@ -291,7 +357,8 @@ Set-Content -LiteralPath (Join-Path $packRoot "README_CN.md") -Value $readme -En
 $version = @"
 Name: $PackName
 Built: $(Get-Date -Format "yyyy-MM-dd HH:mm:ss")
-Godot target: 4.6.x stable
+Godot target: 4.7.1 stable
+Bundled engine: $IncludeGodot
 MCP server: godot-mcp-server@0.5.0
 Optional AI tool entries: Claude Code, Codex chat
 "@
@@ -299,8 +366,13 @@ Optional AI tool entries: Claude Code, Codex chat
 Set-Content -LiteralPath (Join-Path $packRoot "VERSION.txt") -Value $version -Encoding UTF8
 
 Compress-Archive -Path (Join-Path $packRoot "*") -DestinationPath $zipPath -Force
+$zipHash = (Get-FileHash -LiteralPath $zipPath -Algorithm SHA256).Hash.ToLowerInvariant()
+$zipHashPath = "$zipPath.sha256"
+$zipFileName = Split-Path -Leaf $zipPath
+Set-Content -LiteralPath $zipHashPath -Value "$zipHash  $zipFileName" -Encoding ascii -NoNewline
 
 Write-Host "Lazy pack built:" $packRoot
 Write-Host "Zip:" $zipPath
+Write-Host "SHA-256:" $zipHashPath
 exit 0
 

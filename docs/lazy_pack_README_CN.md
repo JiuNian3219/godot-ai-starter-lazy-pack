@@ -1,14 +1,16 @@
 # Godot AI Starter Lazy Pack
 
-这是一个 Godot 4.6.x + GDScript + AI 协作工作流懒人包。
+这是一个 Godot 4.7.1 + GDScript + AI 协作工作流懒人包。
 
 它不是让 AI 临场手写模板，而是把已经验证过的模板放在 `template/` 里。你只需要解压，然后运行 `install.ps1`。
+
+GitHub Release 的 Windows x64 发行包会内置 Godot 4.7.1；源码仓库默认不提交引擎二进制。
 
 ## 你需要先安装
 
 硬依赖：
 
-- Godot 4.6.x stable
+- Godot 4.7.1 stable
 - Git
 - Git LFS
 - Node.js LTS / npm / npx
@@ -26,13 +28,29 @@
 powershell -ExecutionPolicy Bypass -File .\template\scripts\find_godot_candidates.ps1
 ```
 
-让当前 AI 先报告候选 Godot 4.6.x 路径并向你确认。确认后再运行：
+让当前 AI 先报告候选 Godot 4.7.1 路径并向你确认。确认后再运行：
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\install.ps1 -TargetPath "C:\path\to\new-game" -ProjectName "New Game" -GodotBin "C:\confirmed\path\to\Godot_v4.6.x-stable_win64_console.exe"
+powershell -ExecutionPolicy Bypass -File .\install.ps1 -TargetPath "C:\path\to\new-game" -ProjectName "New Game" -GodotBin "C:\confirmed\path\to\Godot_v4.7.1-stable_win64_console.exe"
 ```
 
 安装脚本会验证版本，并把确认后的绝对路径写入被 Git 忽略的 `tools\godot-bin.path`。后续 `verify.ps1`、打开编辑器和运行游戏都能从这里读取，不依赖这次安装进程的临时环境变量。
+
+## 构建发行包
+
+构建轻量包：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\build_lazy_pack.ps1
+```
+
+构建含 Windows x64 Godot 4.7.1 的发行包：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\build_lazy_pack.ps1 -IncludeGodot
+```
+
+后者生成 `dist\GodotAIStarterLazyPack-Godot-4.7.1-win64.zip` 和同名 `.sha256` 校验文件，应一起作为 GitHub Release 附件发布；引擎本体不进入 Git 历史。
 
 ## 安装脚本会做什么
 

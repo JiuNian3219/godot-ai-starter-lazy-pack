@@ -9,7 +9,7 @@ The lazy-pack installer accepted a Godot path only for its own process. New term
 
 ## Decision
 
-The installation prompt makes the active AI agent run `scripts/find_godot_candidates.ps1`, show compatible Godot 4.6.x candidates, and ask the user to confirm one. The installer validates and saves the selected absolute path to ignored `tools/godot-bin.path`; `resolve-godot.ps1` reads it before environment and PATH fallbacks.
+The installation prompt makes the active AI agent run `scripts/find_godot_candidates.ps1`, show compatible Godot 4.7.1 candidates, and ask the user to confirm one. The installer validates and saves the selected absolute path to ignored `tools/godot-bin.path`; `resolve-godot.ps1` reads it before environment and PATH fallbacks.
 
 Validation has three stages: foundation, ordinary feature development, and a user-declared vertical slice. Only the vertical slice receives a formal playtest and feel-tuning checklist. It must be a limited but representative experience whose in-scope gameplay, presentation, and technical baseline work together near the intended quality bar.
 

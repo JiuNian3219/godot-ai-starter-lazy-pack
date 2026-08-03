@@ -24,7 +24,12 @@ function Get-GodotVersion {
         return ""
     }
 
-    return ($version | Select-Object -First 1).ToString().Trim()
+    $firstLine = $version | Select-Object -First 1
+    if ($null -eq $firstLine) {
+        return ""
+    }
+
+    return $firstLine.ToString().Trim()
 }
 
 $candidatePaths = [System.Collections.Generic.List[string]]::new()
@@ -68,12 +73,12 @@ $results = $candidatePaths |
         [PSCustomObject]@{
             Path = $_
             Version = $version
-            IsGodot46 = $version -match "^4\.6\."
+            IsGodot471 = $version -match "^4\.7\.1\."
         }
     }
 
 if (-not $IncludeIncompatible) {
-    $results = @($results | Where-Object { $_.IsGodot46 })
+    $results = @($results | Where-Object { $_.IsGodot471 })
 }
 
 if ($AsJson) {
@@ -82,7 +87,7 @@ if ($AsJson) {
 }
 
 if (-not $results) {
-    Write-Host "No compatible Godot 4.6.x executable was found in GODOT_BIN, PATH, project tools, Downloads, Documents, or common install folders."
+    Write-Host "No compatible Godot 4.7.1 executable was found in GODOT_BIN, PATH, project tools, Downloads, Documents, or common install folders."
     exit 1
 }
 

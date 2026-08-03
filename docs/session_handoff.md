@@ -4,7 +4,7 @@ Last updated: 2026-06-04
 
 ## Current State
 
-- Godot 4.6.3 stable local tool is available under `tools/` and ignored by Git.
+- Godot 4.7.1 stable local tool is available under `tools/` and ignored by Git.
 - Godot MCP addon is installed under `addons/godot_mcp/`.
 - Claude project MCP config is in `.mcp.json`.
 - Claude project skills exist for feature implementation, testing, review, and project memory.

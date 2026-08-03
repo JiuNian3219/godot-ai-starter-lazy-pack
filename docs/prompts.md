@@ -24,7 +24,7 @@ Claude Code、Codex chat 这类工具都只是“有手的 AI 入口”。提示
 - .mcp.json
 - .claude/skills/（如果当前工具能读取/调用）
 
-请实现这个 Godot 4.6 GDScript 功能：<写清楚功能>
+请实现这个 Godot 4.7.1 GDScript 功能：<写清楚功能>
 
 要求：
 1. 代码质量优先。MCP 只用于编辑器/运行时操作、场景检查、截图、节点操作和错误读取，不是架构替代品。
@@ -75,7 +75,7 @@ Claude Code、Codex chat 这类工具都只是“有手的 AI 入口”。提示
 开始前请先发现并读取本项目可用的本地规则、skills、MCP 配置和验证脚本。尤其要检查 AGENTS.md、docs/engineering_rules.md、docs/game_development_rules.md、docs/architecture_rules.md，以及当前工具能识别的 .claude/skills/。
 
 重点检查：
-1. Godot 4.6 API 是否正确。
+1. Godot 4.7.1 API 是否正确。
 2. 是否有 Godot 3 旧写法。
 3. typed GDScript 是否足够清晰。
 4. 函数作用、关键玩法逻辑、特殊判定、状态切换、时间窗、可调参数、资源加载假设和性能敏感点是否有简明中文注释。
@@ -93,7 +93,7 @@ Claude Code、Codex chat 这类工具都只是“有手的 AI 入口”。提示
 当一个 agent 完成功能后，把 `git diff`、相关文件片段、`scripts/verify.ps1` 输出交给另一个 agent，然后用：
 
 ```text
-请作为独立 reviewer 审查这次 Godot 4.6 GDScript 改动。
+请作为独立 reviewer 审查这次 Godot 4.7.1 GDScript 改动。
 
 你不是刚才的实现 agent。请从第二视角检查问题。
 
@@ -101,7 +101,7 @@ Claude Code、Codex chat 这类工具都只是“有手的 AI 入口”。提示
 
 重点看：
 1. bug 和行为风险。
-2. Godot 4.6 API 是否正确。
+2. Godot 4.7.1 API 是否正确。
 3. 是否有旧 Godot 写法。
 4. 函数作用、关键玩法逻辑、特殊判定、状态切换、时间窗、可调参数和性能敏感点是否有简明中文注释。
 5. 节点/场景耦合是否脆弱。
@@ -125,7 +125,7 @@ Claude Code、Codex chat 这类工具都只是“有手的 AI 入口”。提示
 ## 交接给另一个 AI Agent
 
 ```text
-请接手这个 Godot 4.6 GDScript 任务。
+请接手这个 Godot 4.7.1 GDScript 任务。
 
 上一个 agent 已经停止写文件。你现在可以作为唯一写文件 agent。
 

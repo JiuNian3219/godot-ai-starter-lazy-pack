@@ -50,8 +50,9 @@ function Resolve-SelectedGodot {
 
     $resolvedPath = (Resolve-Path -LiteralPath $CandidatePath).Path
     $version = & $resolvedPath --version 2>$null
-    if ($LASTEXITCODE -ne 0 -or -not (($version | Select-Object -First 1).ToString() -match "^4\.6\.")) {
-        throw "Godot 4.6.x stable is required. Candidate '$resolvedPath' reported: $($version | Select-Object -First 1)"
+    $versionText = $version | Select-Object -First 1
+    if ($LASTEXITCODE -ne 0 -or -not ($versionText -and ($versionText.ToString() -match "^4\.7\.1\."))) {
+        throw "Godot 4.7.1 stable is required. Candidate '$resolvedPath' reported: $versionText"
     }
 
     return $resolvedPath
@@ -112,7 +113,7 @@ Last updated: $(Get-Date -Format "yyyy-MM-dd")
 
 ## Current State
 
-- New Godot 4.6.x AI-assisted project scaffolded from the verified template.
+- New Godot 4.7.1 AI-assisted project scaffolded from the verified template.
 - Confirmed Godot path is saved locally in ``tools/godot-bin.path`` and is ignored by Git.
 - Godot MCP addon is installed under ``addons/godot_mcp/``.
 - Claude project MCP config is in ``.mcp.json``.

@@ -32,7 +32,7 @@
    Expand-Archive -LiteralPath "C:\path\to\GodotAIStarterLazyPack.zip" -DestinationPath "C:\path\to\GodotAIStarterLazyPack" -Force
    ```
 
-5. 主动查找本机可用的 Godot 4.6.x stable，不要一开始要求我手填路径：
+5. 主动查找本机可用的 Godot 4.7.1 stable，不要一开始要求我手填路径：
    ```powershell
    powershell -ExecutionPolicy Bypass -File "C:\path\to\GodotAIStarterLazyPack\template\scripts\find_godot_candidates.ps1"
    ```
@@ -42,7 +42,7 @@
 
 6. 收到我的确认后，运行懒人包里的安装脚本。把确认过的绝对路径传给 `-GodotBin`：
    ```powershell
-   powershell -ExecutionPolicy Bypass -File "C:\path\to\GodotAIStarterLazyPack\install.ps1" -TargetPath "C:\path\to\new-game" -ProjectName "New Game" -GodotBin "C:\confirmed\path\to\Godot_v4.6.x-stable_win64_console.exe"
+   powershell -ExecutionPolicy Bypass -File "C:\path\to\GodotAIStarterLazyPack\install.ps1" -TargetPath "C:\path\to\new-game" -ProjectName "New Game" -GodotBin "C:\confirmed\path\to\Godot_v4.7.1-stable_win64_console.exe"
    ```
    安装脚本会将该路径保存到新项目被 Git 忽略的 `tools\godot-bin.path`；之后的新终端不依赖临时环境变量。
 

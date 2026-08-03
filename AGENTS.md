@@ -1,10 +1,10 @@
 # Godot AI Project Instructions
 
-This project uses Godot 4.6.x stable with GDScript.
+This project uses Godot 4.7.1 stable with GDScript.
 
 ## Rules
 
-- Treat Godot engine version as 4.6.x unless the user says otherwise.
+- Treat Godot engine version as 4.7.1 unless the user says otherwise.
 - Prefer GDScript for gameplay scripts during prototyping.
 - Write good code first. MCP is only an editor/runtime operation bridge, not a substitute for architecture, readable scripts, tests, or clear data flow.
 - Put gameplay logic in focused scripts, reusable components, resources, and scenes with explicit responsibilities.

@@ -1,6 +1,6 @@
 ---
 name: godot-test
-description: Use when adding or improving verification, smoke tests, regression tests, or testability for Godot 4.6 GDScript code.
+description: Use when adding or improving verification, smoke tests, regression tests, or testability for Godot 4.7.1 GDScript code.
 ---
 
 # Godot Test Skill

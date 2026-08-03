@@ -1,6 +1,6 @@
 ---
 name: godot-review
-description: Use when reviewing Godot 4.6 GDScript code, AI-generated scripts, scenes, project settings, or MCP-created changes.
+description: Use when reviewing Godot 4.7.1 GDScript code, AI-generated scripts, scenes, project settings, or MCP-created changes.
 ---
 
 # Godot Review Skill
@@ -9,7 +9,7 @@ Review for bugs, maintainability, Godot version mismatches, and teachability.
 
 ## Checklist
 
-- Does this use Godot 4.6 APIs, not old Godot 3 patterns?
+- Does this use Godot 4.7.1 APIs, not old Godot 3 patterns?
 - Are scripts typed enough to catch mistakes early?
 - Are responsibilities clear, or did a scene script become a catch-all file?
 - Do custom functions, important gameplay logic, special cases, timing windows, tunable parameters, and non-obvious Godot behavior have concise Chinese comments?

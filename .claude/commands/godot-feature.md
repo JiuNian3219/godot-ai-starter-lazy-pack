@@ -1,2 +1,1 @@
-Use the `godot-feature` skill. Implement the requested Godot 4.6 feature code-first, using MCP only for editor/runtime state when needed. Keep the feature scoped, use typed GDScript, run `scripts/verify.ps1`, and explain the important Godot concepts.
-
+Use the `godot-feature` skill. Implement the requested Godot 4.7.1 feature code-first, using MCP only for editor/runtime state when needed. Keep the feature scoped, use typed GDScript, run `scripts/verify.ps1`, and explain the important Godot concepts.

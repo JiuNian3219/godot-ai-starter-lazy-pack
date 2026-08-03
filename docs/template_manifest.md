@@ -6,7 +6,7 @@ This file explains exactly what the Godot AI template uses.
 
 You provide these on the machine:
 
-- Godot 4.6.x stable
+- Godot 4.7.1 stable
 - Git
 - Git LFS
 - Node.js LTS with npm/npx
@@ -102,7 +102,9 @@ The verified template currently checks:
 
 ## Godot Discovery
 
-`scripts/find_godot_candidates.ps1` checks `GODOT_BIN`, PATH, the project `tools/` folder, and common Windows install/download folders for Godot 4.6.x. The installation prompt requires the current AI agent to show these candidates and ask the user to confirm one before it runs the installer. `install.ps1` then saves that confirmed absolute path to the ignored `tools/godot-bin.path`, which `scripts/resolve-godot.ps1` reads in later terminals.
+`scripts/find_godot_candidates.ps1` checks `GODOT_BIN`, PATH, the project `tools/` folder, and common Windows install/download folders for Godot 4.7.1. The installation prompt requires the current AI agent to show these candidates and ask the user to confirm one before it runs the installer. `install.ps1` then saves that confirmed absolute path to the ignored `tools/godot-bin.path`, which `scripts/resolve-godot.ps1` reads in later terminals.
+
+`scripts/build_lazy_pack.ps1 -IncludeGodot` creates a separate Windows x64 distribution ZIP with the selected Godot 4.7.1 executable pair under `template/tools/Godot-4.7.1/`. It writes an `ENGINE_MANIFEST.txt` with the engine source and SHA-256, plus a sibling `.sha256` file for the finished ZIP. The engine is never copied into the Git repository itself.
 
 ## Prompt Locations
 

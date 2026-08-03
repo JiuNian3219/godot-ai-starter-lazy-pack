@@ -2,7 +2,7 @@
 
 ## Tool entries
 
-- Godot 4.6.x: editor, runtime, importer, command-line validator.
+- Godot 4.7.1: editor, runtime, importer, command-line validator.
 - Git + Git LFS: checkpoint every meaningful step, store large binary assets safely.
 - Claude Code: AI tool entry that can expose project-local Claude skills.
 - Codex chat: AI tool entry that can read project rules and update project files through direct conversation.
@@ -44,7 +44,7 @@
 
 ## Common pitfalls
 
-- Godot 3 snippets often fail in Godot 4.6. Always specify `Godot 4.6 GDScript`.
+- Godot 3 snippets often fail in Godot 4.7.1. Always specify `Godot 4.7.1 GDScript`.
 - `.tscn` is text, but careless edits can break resources, signals, or node ownership.
 - MCP changes are direct edits, not safe preview operations.
 - A workflow that relies only on MCP can produce a working scene with messy, unmaintainable code.

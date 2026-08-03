@@ -16,4 +16,4 @@ After installing, clear `GODOT_BIN` and run `powershell -ExecutionPolicy Bypass 
 
 ## Rule Added
 
-Ask the user to confirm an auto-discovered Godot 4.6.x executable during installation, then save it to ignored `tools/godot-bin.path`. All project scripts resolve this saved path first.
+Ask the user to confirm an auto-discovered Godot 4.7.1 executable during installation, then save it to ignored `tools/godot-bin.path`. All project scripts resolve this saved path first.

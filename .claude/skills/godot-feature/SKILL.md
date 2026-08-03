@@ -1,6 +1,6 @@
 ---
 name: godot-feature
-description: Use when implementing a Godot 4.6 gameplay feature, scene behavior, UI flow, tool script, or reusable game system.
+description: Use when implementing a Godot 4.7.1 gameplay feature, scene behavior, UI flow, tool script, or reusable game system.
 ---
 
 # Godot Feature Skill
