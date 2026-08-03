@@ -5,7 +5,6 @@
 - Godot 4.6.x: editor, runtime, importer, command-line validator.
 - Git + Git LFS: checkpoint every meaningful step, store large binary assets safely.
 - Claude Code: AI tool entry that can expose project-local Claude skills.
-- QoderCN/Qoder: AI tool entry that can expose project-local Qoder rules/skills.
 - Codex chat: AI tool entry that can read project rules and update project files through direct conversation.
 - Godot MCP: bridge between AI clients and the running Godot editor. It is the hands and eyes, not the architecture.
 
@@ -41,7 +40,6 @@
 - Use `docs/lessons/` for repeatable mistakes and gotchas.
 - Use `docs/session_handoff.md` to resume after long AI sessions or context switches.
 - Use `.claude/skills/godot-memory` when ending a substantial Claude Code session.
-- Use `.qoder/skills/godot-memory` when ending a substantial QoderCN/Qoder session if the current tool recognizes it.
 - For Codex chat sessions, explicitly ask Codex to update `docs/session_handoff.md`, decisions, and lessons when needed.
 
 ## Common pitfalls

@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted
+Superseded by 0004
 
 ## Context
 
@@ -21,7 +21,7 @@ Add QoderCN/Qoder as an optional AI tool adapter:
 - Reuse the same `AGENTS.md`, `docs/`, `.mcp.json`, and `scripts/verify.ps1` instead of creating a separate Qoder-only workflow.
 - Keep Qoder checks optional in the lazy pack installer.
 
-## Consequences
+## Historical Consequences
 
 - New projects can test QoderCN/Qoder without changing the engineering rules.
 - Claude Code and Codex remain usable with the same project.

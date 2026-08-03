@@ -24,7 +24,6 @@ Set-Content -LiteralPath (Join-Path $outputRootPath ".gdignore") -Value "" -Enco
 
 $copyItems = @(
     ".claude",
-    ".qoder",
     "addons",
     "docs",
     "scenes",
@@ -165,19 +164,8 @@ Invoke-External npx --version
 
 Write-Host "Checking optional AI tools..."
 $foundClaude = Show-OptionalCommandVersion -Name "claude" -Label "Claude Code"
-$foundQoder = Show-OptionalCommandVersion -Name "qodercn" -Label "QoderCN"
-if (-not $foundQoder) {
-    $foundQoder = Show-OptionalCommandVersion -Name "qoderclicn" -Label "QoderCN CLI"
-}
-if (-not $foundQoder) {
-    $foundQoder = Show-OptionalCommandVersion -Name "qoder" -Label "Qoder"
-}
-if (-not $foundQoder) {
-    $foundQoder = Show-OptionalCommandVersion -Name "qodercli" -Label "Qoder CLI"
-}
-
-if (-not $foundClaude -and -not $foundQoder) {
-    Write-Host "No Claude Code or QoderCN/Qoder command found. Setup can continue; use Codex chat or install an AI CLI later."
+if (-not $foundClaude) {
+    Write-Host "Claude Code command not found. Setup can continue; use Codex chat or install Claude Code later."
 }
 
 $selectedGodotBin = ""
@@ -197,7 +185,6 @@ Write-Host "Using confirmed Godot:" $selectedGodotBin
 
 $copyItems = @(
     ".claude",
-    ".qoder",
     "addons",
     "docs",
     "scenes",
@@ -242,7 +229,7 @@ Last updated: $(Get-Date -Format "yyyy-MM-dd")
 - Confirmed Godot path is saved locally in ``tools/godot-bin.path`` and is ignored by Git.
 - Godot MCP addon is installed under ``addons/godot_mcp/``.
 - Project MCP config is in ``.mcp.json``.
-- AI tool adapters are available: ``.mcp.json``, ``.claude/skills/``, and ``.qoder/``.
+- AI tool adapters are available: ``.mcp.json`` and ``.claude/skills/``.
 - Shared project rules are available under ``AGENTS.md`` and ``docs/``.
 - Long-term AI memory exists under ``docs/ai_memory.md``, ``docs/decisions/``, ``docs/lessons/``, and this file.
 
@@ -288,7 +275,6 @@ try {
     Write-Host "Next commands:"
     Write-Host '  powershell -ExecutionPolicy Bypass -File scripts\open_editor.ps1'
     Write-Host '  cmd /c "claude mcp get godot"    # optional adapter check'
-    Write-Host '  qodercn                            # optional AI tool entry'
     Write-Host '  Open Codex chat in this folder      # optional AI tool entry'
 }
 finally {
@@ -307,7 +293,7 @@ Name: $PackName
 Built: $(Get-Date -Format "yyyy-MM-dd HH:mm:ss")
 Godot target: 4.6.x stable
 MCP server: godot-mcp-server@0.5.0
-Optional AI tool entries: Claude Code, QoderCN/Qoder, Codex chat
+Optional AI tool entries: Claude Code, Codex chat
 "@
 
 Set-Content -LiteralPath (Join-Path $packRoot "VERSION.txt") -Value $version -Encoding UTF8

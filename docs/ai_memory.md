@@ -8,7 +8,6 @@ Before a medium or large task, the active agent should read:
 
 - `AGENTS.md`
 - `CLAUDE.md`
-- `.qoder/rules/` when the current tool recognizes Qoder rules
 - `docs/ai_workflow.md`
 - `docs/ai_memory.md`
 - relevant files under `docs/decisions/`
@@ -56,7 +55,7 @@ Use this after long AI runs, context compaction, or a switch between AI tool ent
 
 ## Review Loop
 
-Treat Claude Code, QoderCN/Qoder, and Codex chat as tool entries for a current AI agent. Any one entry may be used for implementation or review, but only one should write files for a task at a time.
+Treat Claude Code and Codex chat as tool entries for a current AI agent. Either may be used for implementation or review, but only one should write files for a task at a time.
 
 Before calling work done:
 

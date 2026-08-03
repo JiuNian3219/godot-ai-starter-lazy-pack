@@ -4,7 +4,7 @@
 
 安装懒人包时使用：`docs/next_project_prompt.md`。
 
-Claude Code、QoderCN、Codex chat 这类工具都只是“有手的 AI 入口”。提示词不应该把某个工具固定成实现、测试或 review 角色。真正的规则是：当前可操作工作区的 AI agent 先发现项目内可用的 rules、skills、MCP 和验证脚本，然后按同一套工程流程完成任务。
+Claude Code、Codex chat 这类工具都只是“有手的 AI 入口”。提示词不应该把某个工具固定成实现、测试或 review 角色。真正的规则是：当前可操作工作区的 AI agent 先发现项目内可用的 rules、skills、MCP 和验证脚本，然后按同一套工程流程完成任务。
 
 ## 当前 AI Agent 实现功能
 
@@ -23,7 +23,6 @@ Claude Code、QoderCN、Codex chat 这类工具都只是“有手的 AI 入口�
 - docs/session_handoff.md
 - .mcp.json
 - .claude/skills/（如果当前工具能读取/调用）
-- .qoder/rules/ 与 .qoder/skills/（如果当前工具能读取/调用）
 
 请实现这个 Godot 4.6 GDScript 功能：<写清楚功能>
 
@@ -53,7 +52,7 @@ Claude Code、QoderCN、Codex chat 这类工具都只是“有手的 AI 入口�
 ```text
 你现在是当前任务的唯一写文件 agent。
 
-开始前请先发现并读取本项目可用的本地规则、skills、MCP 配置和验证脚本。尤其要检查 AGENTS.md、docs/ai_workflow.md、docs/ai_memory.md、docs/engineering_rules.md，以及当前工具能识别的 .claude/skills/ 或 .qoder/skills/。
+开始前请先发现并读取本项目可用的本地规则、skills、MCP 配置和验证脚本。尤其要检查 AGENTS.md、docs/ai_workflow.md、docs/ai_memory.md、docs/engineering_rules.md，以及当前工具能识别的 .claude/skills/。
 
 请给下面这个行为添加验证：<写清楚行为或 bug>
 
@@ -73,7 +72,7 @@ Claude Code、QoderCN、Codex chat 这类工具都只是“有手的 AI 入口�
 ```text
 请按代码审查模式 review 当前 diff，先列问题，再给简短修改建议。
 
-开始前请先发现并读取本项目可用的本地规则、skills、MCP 配置和验证脚本。尤其要检查 AGENTS.md、docs/engineering_rules.md、docs/game_development_rules.md、docs/architecture_rules.md，以及当前工具能识别的 .claude/skills/ 或 .qoder/skills/。
+开始前请先发现并读取本项目可用的本地规则、skills、MCP 配置和验证脚本。尤其要检查 AGENTS.md、docs/engineering_rules.md、docs/game_development_rules.md、docs/architecture_rules.md，以及当前工具能识别的 .claude/skills/。
 
 重点检查：
 1. Godot 4.6 API 是否正确。

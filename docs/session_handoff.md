@@ -8,7 +8,6 @@ Last updated: 2026-06-04
 - Godot MCP addon is installed under `addons/godot_mcp/`.
 - Claude project MCP config is in `.mcp.json`.
 - Claude project skills exist for feature implementation, testing, review, and project memory.
-- Optional QoderCN/Qoder project rules and skills exist under `.qoder/`.
 - Codex chat can use `AGENTS.md` and the docs directly.
 - A reusable `HealthComponent` and command-line test were added as a real validation pass.
 - Long-term AI memory now exists under `docs/ai_memory.md`, `docs/decisions/`, `docs/lessons/`, and `docs/session_handoff.md`.

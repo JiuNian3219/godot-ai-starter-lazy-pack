@@ -3,7 +3,7 @@
 开新项目时，把下面这段提示词给当前 AI agent。
 
 ```text
-你的任务不是手写 AGENTS.md、CLAUDE.md、Qoder rules、skills、MCP 配置或 Godot 场景。这些内容已经在 GodotAIStarterLazyPack.zip 里。
+你的任务不是手写 AGENTS.md、CLAUDE.md、Claude skills、MCP 配置或 Godot 场景。这些内容已经在 GodotAIStarterLazyPack.zip 里。
 
 请按下面流程做：
 
@@ -16,13 +16,9 @@
    npx --version
    ```
 
-2. 检查可选 AI 工具入口。缺少其中某个不应该阻塞安装：
+2. 检查可选 Claude Code 入口。缺少它不应该阻塞安装：
    ```powershell
    claude --version
-   qodercn --version
-   qoderclicn --version
-   qoder --version
-   qodercli --version
    ```
    如果命令不存在，只要报告“未安装/未在 PATH”，不要把它当成失败。
 
@@ -61,13 +57,6 @@
    - `.claude/skills/godot-test/SKILL.md`
    - `.claude/skills/godot-review/SKILL.md`
    - `.claude/skills/godot-memory/SKILL.md`
-   - `.qoder/rules/00-project-rules.md`
-   - `.qoder/rules/10-godot-engineering.md`
-   - `.qoder/rules/20-game-dev.md`
-   - `.qoder/skills/godot-feature/SKILL.md`
-   - `.qoder/skills/godot-test/SKILL.md`
-   - `.qoder/skills/godot-review/SKILL.md`
-   - `.qoder/skills/godot-memory/SKILL.md`
 
 9. 检查新项目里这些通用文件是否存在：
    - `AGENTS.md`
@@ -104,5 +93,4 @@
 
 - `docs/prompts.md`：通用任务提示词。
 - `.claude/skills/`：Claude Code 可识别的项目技能。
-- `.qoder/rules/` 与 `.qoder/skills/`：QoderCN / Qoder 可识别的项目规则和技能。
 - `AGENTS.md` 与 `docs/`：所有 AI agent 的共享规则。

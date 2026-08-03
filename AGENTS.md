@@ -24,13 +24,12 @@ This project uses Godot 4.6.x stable with GDScript.
 
 ## Agent workflow
 
-- Claude Code, QoderCN/Qoder, and Codex chat are AI tool entries with hands on the workspace.
+- Claude Code and Codex chat are AI tool entries with hands on the workspace.
 - The current active AI agent may implement, test, refactor, review, explain, or update memory.
 - Pick one active writing agent per task. Another AI entry can review, explain, or take over after the first agent stops.
 - Do not let two AI agents edit the same files at the same time.
 - When handing work from one agent to another, share the changed files, verification output, open risks, and relevant `docs/session_handoff.md` notes.
 - Claude Code has project-local skills under `.claude/skills/`. Codex follows `AGENTS.md`, `docs/ai_workflow.md`, `docs/ai_memory.md`, and the user's latest instructions.
-- QoderCN/Qoder has project-local rules under `.qoder/rules/` and project-local skills under `.qoder/skills/`.
 
 ## Code quality baseline
 

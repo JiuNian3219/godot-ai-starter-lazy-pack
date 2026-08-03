@@ -72,7 +72,6 @@ else {
 
 $copyItems = @(
     ".claude",
-    ".qoder",
     "addons",
     "docs",
     "scenes",

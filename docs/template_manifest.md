@@ -11,11 +11,10 @@ You provide these on the machine:
 - Git LFS
 - Node.js LTS with npm/npx
 - Claude Code, optional
-- QoderCN/Qoder, optional
 - Codex chat access through the user interface
 
 The template does not require Codex CLI.
-The template does not require Claude Code or QoderCN/Qoder, but includes optional Claude Code skills and Qoder rules/skills so those tool entries can discover project workflows.
+The template does not require Claude Code, but includes optional Claude Code skills for that tool entry to discover project workflows.
 
 ## External Runtime Packages
 
@@ -49,13 +48,6 @@ Use `scripts/create_new_project_from_template.ps1` to copy these from this verif
 - `.claude/commands/godot-test.md`
 - `.claude/commands/godot-review.md`
 - `.claude/commands/godot-memory.md`
-- `.qoder/rules/00-project-rules.md`
-- `.qoder/rules/10-godot-engineering.md`
-- `.qoder/rules/20-game-dev.md`
-- `.qoder/skills/godot-feature/SKILL.md`
-- `.qoder/skills/godot-test/SKILL.md`
-- `.qoder/skills/godot-review/SKILL.md`
-- `.qoder/skills/godot-memory/SKILL.md`
 - `.mcp.json`
 - `.gitattributes`
 - `.gitignore`
@@ -71,8 +63,6 @@ Use `scripts/create_new_project_from_template.ps1` to copy these from this verif
 ## Project-Local Skills
 
 The Claude skills are not downloaded from a marketplace. They are plain Markdown files under `.claude/skills/` and are copied from this template.
-
-Qoder skills are plain Markdown files under `.qoder/skills/`, and Qoder project rules are under `.qoder/rules/`. They are copied from this template for QoderCN/Qoder-compatible tool entries.
 
 Codex does not need a separate local skill package for this template. It uses `AGENTS.md`, `docs/ai_workflow.md`, `docs/ai_memory.md`, and the prompts in `docs/prompts.md`.
 
@@ -124,4 +114,3 @@ The pack keeps prompts intentionally small:
 - `docs/game_development_rules.md`: game-specific rules for core loop, feel, feedback, input, camera, animation, physics, levels, assets, performance, tuning, and playtesting.
 - `docs/architecture_rules.md`: module boundaries, dependency direction, and packaging-sensitive rules.
 - `.claude/skills/`: Claude Code project skills used after installation.
-- `.qoder/rules/` and `.qoder/skills/`: optional Qoder project rules and skills used after installation.

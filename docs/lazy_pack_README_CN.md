@@ -16,7 +16,6 @@
 可选 AI 工具入口，至少准备一个即可：
 
 - Claude Code
-- QoderCN / Qoder
 - Codex chat
 
 这些只是让 AI 能读写文件、运行命令、使用 MCP 或识别项目 skills/rules 的入口。项目提示词不会把某个工具固定成实现、测试或 review 角色。
@@ -38,13 +37,13 @@ powershell -ExecutionPolicy Bypass -File .\install.ps1 -TargetPath "C:\path\to\n
 ## 安装脚本会做什么
 
 - 检查 Git、Git LFS、Node.js、npm、npx。
-- 检查可选 AI 工具入口：Claude Code、QoderCN / Qoder。
+- 检查可选 AI 工具入口：Claude Code。
 - 要求已确认的 Godot 路径，并保存为项目本地配置。
 - 复制 `template/` 里的项目模板文件。
 - 修改 `project.godot` 项目名。
 - 初始化 Git 和 Git LFS。
 - 保留 Godot MCP addon。
-- 保留 `.mcp.json`、Claude Code skills、Qoder rules/skills、Codex 可读的 `AGENTS.md` 与 `docs/`。
+- 保留 `.mcp.json`、Claude Code skills、Codex 可读的 `AGENTS.md` 与 `docs/`。
 - 运行 `scripts/verify.ps1`。
 
 ## 提示词在哪里
@@ -63,7 +62,7 @@ docs/prompts.md
 - 交接给另一个 AI agent 的提示词。
 - 长期记忆/复盘提示词。
 
-这些提示词只描述任务流程，不指定“Claude 做实现、Qoder 做某事、Codex 做某事”。当前 agent 应该自己发现项目内可用的 rules、skills、MCP 和验证脚本。
+这些提示词只描述任务流程，不指定“Claude 做实现、Codex 做某事”。当前 agent 应该自己发现项目内可用的 rules、skills、MCP 和验证脚本。
 
 ## 代码注释规则
 
@@ -89,7 +88,6 @@ docs/prompts.md
 
 - `.mcp.json`：项目级 MCP 配置。
 - `.claude/skills/`：Claude Code 可识别的项目技能。
-- `.qoder/rules/` 和 `.qoder/skills/`：QoderCN / Qoder 可识别的项目规则和技能。
 - `AGENTS.md`、`docs/ai_workflow.md`、`docs/ai_memory.md`、`docs/prompts.md`：所有 AI agent 都应该遵守的共享规则。
 
 每次任务只选一个 agent 写文件。另一个 agent 可以 review、解释，或者在明确交接后接手。
@@ -122,10 +120,6 @@ powershell -ExecutionPolicy Bypass -File scripts\verify.ps1
 
 ```powershell
 claude --version
-qodercn --version
-qoderclicn --version
-qoder --version
-qodercli --version
 ```
 
 ## 重要原则
