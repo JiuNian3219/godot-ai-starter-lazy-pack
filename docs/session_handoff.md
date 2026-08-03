@@ -18,6 +18,7 @@ Last updated: 2026-06-04
 - A read-only Claude SessionStart hook script exists at `scripts/ai_context.ps1`.
 - `scripts/find_godot_candidates.ps1` locates compatible Godot executables. New projects save the user-confirmed path to ignored `tools/godot-bin.path`, so validation survives a new terminal session.
 - Manual playtesting is phase-gated: technical checks for foundations and ordinary features; formal playtesting only after the user declares a representative vertical-slice milestone.
+- The repository root `README.md` is the shareable AI installation entry point. It directs an AI to build the lazy pack, ask for Godot-path confirmation, install, and verify.
 
 ## Verification
 
