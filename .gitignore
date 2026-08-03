@@ -1,0 +1,19 @@
+.godot/
+.import/
+export_presets.cfg
+*.tmp
+
+# Local tools and downloaded dependencies.
+tools/Godot-*/
+tools/godot-bin.path
+.tmp/
+
+# Build/export output.
+builds/
+exports/
+dist/
+
+# OS/editor noise.
+.DS_Store
+Thumbs.db
+.vscode/
