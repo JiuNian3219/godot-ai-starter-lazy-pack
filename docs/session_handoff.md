@@ -1,6 +1,6 @@
 # Session Handoff
 
-Last updated: 2026-06-04
+Last updated: 2026-08-04
 
 ## Current State
 
@@ -18,7 +18,8 @@ Last updated: 2026-06-04
 - A read-only Claude SessionStart hook script exists at `scripts/ai_context.ps1`.
 - `scripts/find_godot_candidates.ps1` locates compatible Godot executables. New projects save the user-confirmed path to ignored `tools/godot-bin.path`, so validation survives a new terminal session.
 - Manual playtesting is phase-gated: technical checks for foundations and ordinary features; formal playtesting only after the user declares a representative vertical-slice milestone.
-- The repository root `README.md` is the shareable AI installation entry point. It directs an AI to build the lazy pack, ask for Godot-path confirmation, install, and verify.
+- The repository root `README.md` is the shareable AI installation entry point. It directs an AI to use the release package or build it from source, ask for Godot-path confirmation, install, and verify.
+- `docs/scene_authoring_rules.md` distinguishes persistent scene, runtime, and debug nodes. `tests/main_scene_contract.gd` proves the template can fail when required editor-visible scene structure is missing.
 
 ## Verification
 
@@ -31,6 +32,7 @@ powershell -ExecutionPolicy Bypass -File scripts\verify.ps1
 Result:
 
 ```text
+Main scene contract passed: persisted node structure is present
 HealthComponent tests: 22 passed, 0 failed
 Verify complete.
 ```
@@ -45,7 +47,8 @@ Verify complete.
 - Future feature work should identify module boundaries and dependency direction before adding files.
 - A vertical slice is a polished representative section, not an early framework or first-playable gate. Do not ask users to judge unfinished scaffolding for fun.
 - Dependency audit is intentionally lightweight. It catches obvious `res://` references and large shared assets, but it is not a full Godot dependency graph analyzer.
+- Scene contract tests cover only the paths explicitly asserted for important scenes; they do not infer every intended node automatically.
 
 ## Next Suggested Task
 
-Build a small player movement scene using typed GDScript, then add a command-line test for tunable movement configuration. Reserve formal feel testing until a vertical-slice scope is explicitly chosen.
+When adding the first gameplay scene, classify every node under `docs/scene_authoring_rules.md` and add assertions for its important persistent nodes. Reserve formal feel testing until a vertical-slice scope is explicitly chosen.

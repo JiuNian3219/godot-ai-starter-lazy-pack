@@ -13,7 +13,7 @@ Before medium or large work, read `docs/engineering_rules.md`. For gameplay, inp
 1. Open this project in Godot.
 2. Ensure the `Godot MCP` plugin is installed and enabled.
 3. Confirm the editor shows the MCP connection status.
-4. Use MCP for scene tree inspection, node operations, screenshots, runtime errors, and project visualization.
+4. Read `docs/scene_authoring_rules.md` before node work. Use MCP for scene tree inspection, persistent node operations, screenshots, runtime errors, and project visualization.
 5. Use normal file edits for scripts when scene state is not needed.
 6. Save modified scenes and report changed files.
 
@@ -23,12 +23,13 @@ Before medium or large work, read `docs/engineering_rules.md`. For gameplay, inp
 - Keep scene scripts focused on coordinating their scene.
 - Extract reusable game logic into components, resources, or standalone scripts.
 - Do not bury important gameplay behavior in anonymous editor-only operations.
+- Classify every node as persistent scene, runtime, or debug. Save authored UI, collision, camera, and level structure to `.tscn`; for runtime nodes, document their lifecycle and why they are dynamic.
 - Explain the key Godot concepts behind any new feature so the user can learn while reviewing it.
 - Update project memory when the task creates a durable decision or a repeatable lesson.
 - Avoid cross-module `preload()` / `load()` unless the dependency is allowed by `docs/architecture_rules.md`.
 - Keep large assets out of shared folders unless they are truly shared by every package.
 - Report relevant engineering risks: verification, performance, resource size, platform/input, UI, save/data, and manual playtest needs.
-- For gameplay changes, report the core loop impact, manual playtest checklist, tunable parameters, and placeholder feedback/assets.
+- For gameplay changes, report the core loop impact, tunable parameters, and placeholder feedback/assets. Include a formal playtest checklist only for a user-declared vertical slice.
 
 ## Safety
 

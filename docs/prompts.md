@@ -18,6 +18,7 @@ Claude Code、Codex chat 这类工具都只是“有手的 AI 入口”。提示
 - docs/engineering_rules.md
 - docs/game_development_rules.md
 - docs/architecture_rules.md
+- docs/scene_authoring_rules.md
 - docs/decisions/
 - docs/lessons/
 - docs/session_handoff.md
@@ -30,13 +31,14 @@ Claude Code、Codex chat 这类工具都只是“有手的 AI 入口”。提示
 1. 代码质量优先。MCP 只用于编辑器/运行时操作、场景检查、截图、节点操作和错误读取，不是架构替代品。
 2. gameplay 逻辑写在 typed GDScript、可复用组件、Resource 或职责清楚的场景脚本中。
 3. 不要把场景脚本写成大杂烩。
-4. 代码要有简明中文注释：函数作用要注释；关键玩法逻辑、特殊判定、状态切换、时间窗、可调参数、资源加载假设和性能敏感点要注释；自明的一行代码不要硬塞注释。
-5. 开始前说明：当前是基础设施、普通功能还是用户已明确宣布的垂直切片；涉及模块、新文件位置、依赖方向、核心循环影响、验证方式，以及性能/体积/平台/UI/存档风险。只有高风险交互才列简短人工功能冒烟检查；只有垂直切片才列正式试玩 checklist 和手感评价。
-6. 不要随便跨模块 preload/load，不要把大资源放到 shared 里。
-7. 运行 powershell -ExecutionPolicy Bypass -File scripts/verify.ps1，失败就修到通过。
-8. 验证通过后自动提交代码，除非我明确说不要提交。提交前检查 `git status` 和 `git diff`，只 stage 本次任务真正需要提交的文件，不要提交无关用户改动、生成缓存、本地工具、导出产物、`.godot/`、`.tmp/` 或 ignored 文件。
-9. Git commit 使用 Angular/Conventional Commits 规范：`type(scope): short summary`，常用 type 包括 `feat`、`fix`、`test`、`refactor`、`docs`、`chore`、`perf`、`build`、`ci`、`style`、`revert`。
-10. 如果涉及架构、工具、测试策略或踩坑，请更新 docs/decisions、docs/lessons、docs/session_handoff.md。
+4. 新增节点前必须按 `docs/scene_authoring_rules.md` 标记为持久场景、运行时或调试节点。UI、碰撞、相机和关卡结构默认必须保存到 `.tscn` 并在编辑器可见；运行时节点要说明创建者、释放时机和不保存理由。
+5. 代码要有简明中文注释：函数作用要注释；关键玩法逻辑、特殊判定、状态切换、时间窗、可调参数、资源加载假设和性能敏感点要注释；自明的一行代码不要硬塞注释。
+6. 开始前说明：当前是基础设施、普通功能还是用户已明确宣布的垂直切片；涉及模块、新文件位置、依赖方向、核心循环影响、验证方式，以及性能/体积/平台/UI/存档风险。只有高风险交互才列简短人工功能冒烟检查；只有垂直切片才列正式试玩 checklist 和手感评价。
+7. 不要随便跨模块 preload/load，不要把大资源放到 shared 里。
+8. 运行 powershell -ExecutionPolicy Bypass -File scripts/verify.ps1，失败就修到通过。
+9. 验证通过后自动提交代码，除非我明确说不要提交。提交前检查 `git status` 和 `git diff`，只 stage 本次任务真正需要提交的文件，不要提交无关用户改动、生成缓存、本地工具、导出产物、`.godot/`、`.tmp/` 或 ignored 文件。
+10. Git commit 使用 Angular/Conventional Commits 规范：`type(scope): short summary`，常用 type 包括 `feat`、`fix`、`test`、`refactor`、`docs`、`chore`、`perf`、`build`、`ci`、`style`、`revert`。
+11. 如果涉及架构、工具、测试策略或踩坑，请更新 docs/decisions、docs/lessons、docs/session_handoff.md。
 
 完成后请报告：
 1. 改了哪些文件。
@@ -52,19 +54,20 @@ Claude Code、Codex chat 这类工具都只是“有手的 AI 入口”。提示
 ```text
 你现在是当前任务的唯一写文件 agent。
 
-开始前请先发现并读取本项目可用的本地规则、skills、MCP 配置和验证脚本。尤其要检查 AGENTS.md、docs/ai_workflow.md、docs/ai_memory.md、docs/engineering_rules.md，以及当前工具能识别的 .claude/skills/。
+开始前请先发现并读取本项目可用的本地规则、skills、MCP 配置和验证脚本。尤其要检查 AGENTS.md、docs/ai_workflow.md、docs/ai_memory.md、docs/engineering_rules.md、docs/scene_authoring_rules.md，以及当前工具能识别的 .claude/skills/。
 
 请给下面这个行为添加验证：<写清楚行为或 bug>
 
 要求：
 1. 优先使用轻量 Godot 命令行测试，不要一开始就引入 gdUnit4。
 2. 如果确实需要 gdUnit4，先说明为什么，再添加。
-3. 测试代码也要有必要的中文注释，说明测试目标、特殊断言和回归风险。
-4. 更新 scripts/verify.ps1，让一个命令能跑完相关检查。
-5. 验证脚本必须在失败时返回失败，不允许只打印错误后继续成功。
-6. 运行 powershell -ExecutionPolicy Bypass -File scripts/verify.ps1，直到通过。
-7. 验证通过后自动提交代码，除非我明确说不要提交。提交前检查 `git status` 和 `git diff`，只 stage 本次测试任务真正需要提交的文件。
-8. Git commit 使用 Angular/Conventional Commits 规范，例如 `test(player): cover dash cooldown`。
+3. 涉及重要场景时，断言必须保存到 `.tscn` 的节点路径；运行时创建的节点不能作为场景结构通过依据。
+4. 测试代码也要有必要的中文注释，说明测试目标、特殊断言和回归风险。
+5. 更新 scripts/verify.ps1，让一个命令能跑完相关检查。
+6. 验证脚本必须在失败时返回失败，不允许只打印错误后继续成功。
+7. 运行 powershell -ExecutionPolicy Bypass -File scripts/verify.ps1，直到通过。
+8. 验证通过后自动提交代码，除非我明确说不要提交。提交前检查 `git status` 和 `git diff`，只 stage 本次测试任务真正需要提交的文件。
+9. Git commit 使用 Angular/Conventional Commits 规范，例如 `test(player): cover dash cooldown`。
 ```
 
 ## 当前 AI Agent 自查
@@ -79,11 +82,11 @@ Claude Code、Codex chat 这类工具都只是“有手的 AI 入口”。提示
 2. 是否有 Godot 3 旧写法。
 3. typed GDScript 是否足够清晰。
 4. 函数作用、关键玩法逻辑、特殊判定、状态切换、时间窗、可调参数、资源加载假设和性能敏感点是否有简明中文注释。
-5. 是否有脆弱的节点路径或场景耦合。
-6. 是否违反 docs/engineering_rules.md、docs/game_development_rules.md 或 docs/architecture_rules.md。
+5. 是否有脆弱的节点路径或场景耦合；持久场景、运行时和调试节点的分类是否合理，编辑器可见结构是否真的写进 `.tscn`。
+6. 是否违反 docs/engineering_rules.md、docs/game_development_rules.md、docs/architecture_rules.md 或 docs/scene_authoring_rules.md。
 7. 是否会导致 shared 资源过大、跨模块引用、未来分包困难。
 8. 是否有性能、输入、UI、存档、资源导入、平台风险。
-9. 是否缺少与当前阶段相称的测试或验证；只有已声明为垂直切片的任务才检查正式人工试玩 checklist。
+9. 是否缺少与当前阶段相称的测试或验证；重要场景是否断言了持久节点；只有已声明为垂直切片的任务才检查正式人工试玩 checklist。
 10. 如果这是代码修改任务，是否已经在验证通过后用 Angular/Conventional Commits 规范做了干净提交，且只提交了本次任务必要文件。
 11. 是否需要更新 docs/decisions、docs/lessons 或 docs/session_handoff.md。
 ```
@@ -104,7 +107,7 @@ Claude Code、Codex chat 这类工具都只是“有手的 AI 入口”。提示
 2. Godot 4.7.1 API 是否正确。
 3. 是否有旧 Godot 写法。
 4. 函数作用、关键玩法逻辑、特殊判定、状态切换、时间窗、可调参数和性能敏感点是否有简明中文注释。
-5. 节点/场景耦合是否脆弱。
+5. 节点/场景耦合是否脆弱；AI 是否把应编辑器可见的场景结构错误地写成运行时创建节点。
 6. typed GDScript、组件职责、Resource 使用是否合理。
 7. 是否违反 docs/engineering_rules.md、docs/game_development_rules.md 或 docs/architecture_rules.md。
 8. 是否会导致 shared 资源过大、跨模块引用、未来分包困难。

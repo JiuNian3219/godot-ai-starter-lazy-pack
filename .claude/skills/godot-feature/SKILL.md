@@ -13,11 +13,12 @@ Build features code-first, with MCP only as the editor/runtime bridge.
 2. Identify the scripts, scenes, resources, and input/project settings involved.
 3. Prefer typed GDScript and small responsibilities.
 4. Use MCP only when you need live scene state, node operations, screenshots, or runtime errors.
-5. Keep scene scripts as coordinators. Extract reusable logic into components, resources, or standalone scripts.
-6. Add concise Chinese comments for function purpose, important gameplay logic, special cases, timing windows, tunable parameters, and non-obvious Godot behavior.
-7. Run `powershell -ExecutionPolicy Bypass -File scripts/verify.ps1`.
-8. If verification passes and the user did not forbid committing, stage only the necessary task files and commit using Angular/Conventional Commits style.
-9. Explain the important Godot concepts used and report the commit hash.
+5. Read `docs/scene_authoring_rules.md` before node work. Classify nodes as persistent scene, runtime, or debug; save authored scene structure instead of creating it only in runtime code.
+6. Keep scene scripts as coordinators. Extract reusable logic into components, resources, or standalone scripts.
+7. Add concise Chinese comments for function purpose, important gameplay logic, special cases, timing windows, tunable parameters, and non-obvious Godot behavior.
+8. Run `powershell -ExecutionPolicy Bypass -File scripts/verify.ps1`.
+9. If verification passes and the user did not forbid committing, stage only the necessary task files and commit using Angular/Conventional Commits style.
+10. Explain the important Godot concepts used and report the commit hash.
 
 Only include a short manual functional smoke check when the changed interaction is high risk. Do not ask whether an unfinished framework is fun. A formal playtest checklist and feel judgement belong only to a user-declared vertical-slice milestone.
 

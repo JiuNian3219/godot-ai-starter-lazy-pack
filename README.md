@@ -36,6 +36,7 @@ AI 接到上面的指令后应执行：
 
 - Godot 4.7.1 + typed GDScript 基础工程、示例场景和轻量行为测试。
 - `scripts/verify.ps1`：导入、语法检查、场景 smoke test、组件测试与依赖审计。
+- 场景节点持久化规范与示例契约测试，防止 AI 用运行时节点替代应在编辑器中维护的场景结构。
 - Git、Git LFS、作用域暂存和 Angular/Conventional Commits 规范。
 - `AGENTS.md`、`CLAUDE.md`、Claude project skills、`.mcp.json` 与 Godot MCP addon。
 - 中文安装、实现、测试、review、交接和长期记忆提示词。

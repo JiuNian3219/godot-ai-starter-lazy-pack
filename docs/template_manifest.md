@@ -98,6 +98,7 @@ The verified template currently checks:
 - smoke test syntax
 - HealthComponent test syntax
 - main scene load/instantiate smoke test
+- main scene persisted-node contract test
 - HealthComponent behavior test
 
 ## Godot Discovery
@@ -113,6 +114,7 @@ The pack keeps prompts intentionally small:
 - `docs/next_project_prompt.md`: installation and verification prompt for the lazy pack.
 - `docs/prompts.md`: Chinese prompts for implementation, testing, review, and memory.
 - `docs/engineering_rules.md`: broad engineering quality rules for code, tests, resources, performance, input, UI, data, debugging, and memory.
+- `docs/scene_authoring_rules.md`: node persistence categories and verification requirements for editor-authored scene structure.
 - `docs/game_development_rules.md`: game-specific rules for core loop, feel, feedback, input, camera, animation, physics, levels, assets, performance, tuning, and playtesting.
 - `docs/architecture_rules.md`: module boundaries, dependency direction, and packaging-sensitive rules.
 - `.claude/skills/`: Claude Code project skills used after installation.

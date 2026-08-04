@@ -45,11 +45,17 @@ Invoke-Godot --headless --path $projectRoot --check-only --script res://scripts/
 Write-Host "Checking smoke test syntax..."
 Invoke-Godot --headless --path $projectRoot --check-only --script res://tests/smoke_scene.gd
 
+Write-Host "Checking main scene contract syntax..."
+Invoke-Godot --headless --path $projectRoot --check-only --script res://tests/main_scene_contract.gd
+
 Write-Host "Checking health component test syntax..."
 Invoke-Godot --headless --path $projectRoot --check-only --script res://tests/health_component_test.gd
 
 Write-Host "Running smoke test..."
 Invoke-Godot --headless --path $projectRoot --script res://tests/smoke_scene.gd
+
+Write-Host "Running main scene contract..."
+Invoke-Godot --headless --path $projectRoot --script res://tests/main_scene_contract.gd
 
 Write-Host "Running health component test..."
 Invoke-Godot --headless --path $projectRoot --script res://tests/health_component_test.gd

@@ -27,6 +27,7 @@
 - Scene scripts should coordinate nodes, not become giant feature dumps.
 - Reusable gameplay behavior belongs in components, resources, or standalone scripts.
 - MCP should be used for editor operations, scene inspection, screenshots, and runtime errors.
+- Read `docs/scene_authoring_rules.md` before node work. Treat editor-visible authored structure and runtime-spawned content as different categories, then verify required saved node paths with a scene contract test.
 - Every feature should be readable enough for a learning developer to study and modify.
 - Every completed code-changing task should end with a clean scoped commit after verification passes.
 - Module boundaries and dependency direction should follow `docs/architecture_rules.md`.
@@ -47,6 +48,7 @@
 - Godot 3 snippets often fail in Godot 4.7.1. Always specify `Godot 4.7.1 GDScript`.
 - `.tscn` is text, but careless edits can break resources, signals, or node ownership.
 - MCP changes are direct edits, not safe preview operations.
+- Runtime-created nodes are valid for temporary or data-driven content, but they do not replace `.tscn` authoring. Do not build editor-visible UI, collision, camera, or level structure only in `_ready()`.
 - A workflow that relies only on MCP can produce a working scene with messy, unmaintainable code.
 - Two agents editing the same files will create confusion quickly.
 - AI can generate code faster than it can judge game feel. Do not ask whether an unfinished framework is fun; run hands-on playtesting when a representative vertical slice is ready.

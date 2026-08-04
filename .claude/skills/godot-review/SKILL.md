@@ -14,6 +14,7 @@ Review for bugs, maintainability, Godot version mismatches, and teachability.
 - Are responsibilities clear, or did a scene script become a catch-all file?
 - Do custom functions, important gameplay logic, special cases, timing windows, tunable parameters, and non-obvious Godot behavior have concise Chinese comments?
 - Are node paths brittle?
+- Does each new node have a justified category: persistent scene, runtime, or debug? Are authored UI, collision, camera, and level nodes actually saved to `.tscn` and covered by an appropriate scene contract test?
 - Are signals, groups, resources, and exported references used appropriately?
 - Can the user read this and learn from it?
 - Does `scripts/verify.ps1` still pass?
