@@ -37,6 +37,7 @@ AI 接到上面的指令后应执行：
 - Godot 4.7.1 + typed GDScript 基础工程、示例场景和轻量行为测试。
 - `scripts/verify.ps1`：导入、语法检查、场景 smoke test、组件测试与依赖审计。
 - 场景节点持久化规范与示例契约测试，防止 AI 用运行时节点替代应在编辑器中维护的场景结构。
+- GitHub Actions 持续验证、原型场景规范、`.editorconfig` 和 AI 资产台账模板。
 - Git、Git LFS、作用域暂存和 Angular/Conventional Commits 规范。
 - `AGENTS.md`、`CLAUDE.md`、Claude project skills、`.mcp.json` 与 Godot MCP addon。
 - 中文安装、实现、测试、review、交接和长期记忆提示词。
@@ -58,6 +59,10 @@ powershell -ExecutionPolicy Bypass -File scripts\build_lazy_pack.ps1 -IncludeGod
 ```
 
 含引擎包会生成 `dist\GodotAIStarterLazyPack-Godot-4.7.1-win64.zip` 及同名 `.sha256` 校验文件。引擎二进制只存在于该发行产物和 GitHub Release 附件，不进入 Git 历史；包内 `ENGINE_MANIFEST.txt` 记录官方来源、版本和 SHA-256。
+
+## 持续验证
+
+`.github/workflows/verify.yml` 会在每次 push、Pull Request 或手动触发时下载官方 Linux Godot 4.7.1，并运行同一条 `scripts/verify.ps1`。新项目推送到 GitHub 后，确认仓库的 Actions 已启用，并将失败视为需要修复的验证结果。
 
 ## 不包含内容
 

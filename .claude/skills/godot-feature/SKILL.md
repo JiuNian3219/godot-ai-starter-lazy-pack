@@ -14,11 +14,13 @@ Build features code-first, with MCP only as the editor/runtime bridge.
 3. Prefer typed GDScript and small responsibilities.
 4. Use MCP only when you need live scene state, node operations, screenshots, or runtime errors.
 5. Read `docs/scene_authoring_rules.md` before node work. Classify nodes as persistent scene, runtime, or debug; save authored scene structure instead of creating it only in runtime code.
-6. Keep scene scripts as coordinators. Extract reusable logic into components, resources, or standalone scripts.
-7. Add concise Chinese comments for function purpose, important gameplay logic, special cases, timing windows, tunable parameters, and non-obvious Godot behavior.
-8. Run `powershell -ExecutionPolicy Bypass -File scripts/verify.ps1`.
-9. If verification passes and the user did not forbid committing, stage only the necessary task files and commit using Angular/Conventional Commits style.
-10. Explain the important Godot concepts used and report the commit hash.
+6. For a mechanism-only experiment, read `docs/prototype_scene_rules.md` and keep the scene under `scenes/prototypes/`.
+7. When retaining an AI or external asset, update `docs/assets/asset_manifest.md` and its prompt record when applicable.
+8. Keep scene scripts as coordinators. Extract reusable logic into components, resources, or standalone scripts.
+9. Add concise Chinese comments for function purpose, important gameplay logic, special cases, timing windows, tunable parameters, and non-obvious Godot behavior.
+10. Run `powershell -ExecutionPolicy Bypass -File scripts/verify.ps1`.
+11. If verification passes and the user did not forbid committing, stage only the necessary task files and commit using Angular/Conventional Commits style.
+12. Explain the important Godot concepts used and report the commit hash.
 
 Only include a short manual functional smoke check when the changed interaction is high risk. Do not ask whether an unfinished framework is fun. A formal playtest checklist and feel judgement belong only to a user-declared vertical-slice milestone.
 

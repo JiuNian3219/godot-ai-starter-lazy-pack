@@ -49,12 +49,14 @@ function Resolve-BundledGodot {
 }
 
 $copyItems = @(
+    ".github",
     ".claude",
     "addons",
     "docs",
     "scenes",
     "scripts",
     "tests",
+    ".editorconfig",
     ".gitattributes",
     ".gitignore",
     ".mcp.json",
@@ -239,6 +241,7 @@ else {
 Write-Host "Using confirmed Godot:" $selectedGodotBin
 
 $copyItems = @(
+    ".github",
     ".claude",
     "addons",
     "docs",
@@ -246,6 +249,7 @@ $copyItems = @(
     "scripts",
     "tests",
     "tools",
+    ".editorconfig",
     ".gitattributes",
     ".gitignore",
     ".mcp.json",

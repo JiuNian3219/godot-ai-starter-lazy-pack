@@ -24,6 +24,8 @@ Before medium or large work, read `docs/engineering_rules.md`. For gameplay, inp
 - Extract reusable game logic into components, resources, or standalone scripts.
 - Do not bury important gameplay behavior in anonymous editor-only operations.
 - Classify every node as persistent scene, runtime, or debug. Save authored UI, collision, camera, and level structure to `.tscn`; for runtime nodes, document their lifecycle and why they are dynamic.
+- Keep mechanism-only experiments in `scenes/prototypes/` according to `docs/prototype_scene_rules.md`; do not make them production dependencies by accident.
+- Update `docs/assets/asset_manifest.md` for retained AI or external assets, including source, license status, module ownership, and prompt record when applicable.
 - Explain the key Godot concepts behind any new feature so the user can learn while reviewing it.
 - Update project memory when the task creates a durable decision or a repeatable lesson.
 - Avoid cross-module `preload()` / `load()` unless the dependency is allowed by `docs/architecture_rules.md`.

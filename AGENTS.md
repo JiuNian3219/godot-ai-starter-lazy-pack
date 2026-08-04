@@ -16,6 +16,8 @@ This project uses Godot 4.7.1 stable with GDScript.
 - Prefer editing `.gd` scripts directly. Prefer Godot editor or MCP tools for scene/node operations.
 - Be careful with `.tscn` files: preserve resource paths, node names, signals, and scene ownership.
 - Before adding or changing nodes, read `docs/scene_authoring_rules.md` and classify them as persistent scene, runtime, or debug nodes. Do not create authored UI, collision, camera, or level structure only at runtime when it should be saved and visible in the editor.
+- Before creating a mechanism-only test scene, read `docs/prototype_scene_rules.md`; keep it in `scenes/prototypes/` and prevent it from becoming a production dependency by accident.
+- When adding, replacing, or retaining an AI or external asset, update `docs/assets/asset_manifest.md` and its prompt record when applicable. Do not record caches or transient screenshots.
 - After code or scene changes, run `powershell -ExecutionPolicy Bypass -File scripts/verify.ps1`.
 - After every code-changing task, if verification passes and the user did not explicitly forbid committing, create a Git commit using the Angular/Conventional Commits style. Stage only files that are necessary for the completed task.
 - Keep scenes small and composable. Avoid deep node paths when signals or exported NodePath fields are cleaner.

@@ -72,12 +72,14 @@ else {
 }
 
 $copyItems = @(
+    ".github",
     ".claude",
     "addons",
     "docs",
     "scenes",
     "scripts",
     "tests",
+    ".editorconfig",
     ".gitattributes",
     ".gitignore",
     ".mcp.json",

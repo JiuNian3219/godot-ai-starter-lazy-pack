@@ -14,12 +14,13 @@
 2. Identify engineering risks using `docs/engineering_rules.md`, game-specific risks using `docs/game_development_rules.md`, and module boundaries using `docs/architecture_rules.md` when files/resources are added.
 3. Choose one active writing agent for this task.
 4. Run `scripts/verify.ps1`.
-5. Use the right validation stage: foundation and ordinary feature work use technical checks; only an explicitly declared vertical-slice milestone receives a formal playtest and feel-tuning loop.
-6. After code changes, commit automatically if verification passes and the user did not forbid committing.
-7. Stage only the files required by the task and use Angular/Conventional Commits style: `type(scope): short summary`.
-8. Optionally ask another agent to review, explain, or take over after the first agent stops.
-9. Update `docs/session_handoff.md` after substantial work.
-10. Record decisions or lessons when the work creates durable knowledge.
+5. Treat the GitHub Actions result as the hosted verification gate after pushing; do not dismiss a CI failure because local verification passed.
+6. Use the right validation stage: foundation and ordinary feature work use technical checks; only an explicitly declared vertical-slice milestone receives a formal playtest and feel-tuning loop.
+7. After code changes, commit automatically if verification passes and the user did not forbid committing.
+8. Stage only the files required by the task and use Angular/Conventional Commits style: `type(scope): short summary`.
+9. Optionally ask another agent to review, explain, or take over after the first agent stops.
+10. Update `docs/session_handoff.md` after substantial work.
+11. Record decisions or lessons when the work creates durable knowledge.
 
 ## Code-first standard
 
@@ -49,6 +50,8 @@
 - `.tscn` is text, but careless edits can break resources, signals, or node ownership.
 - MCP changes are direct edits, not safe preview operations.
 - Runtime-created nodes are valid for temporary or data-driven content, but they do not replace `.tscn` authoring. Do not build editor-visible UI, collision, camera, or level structure only in `_ready()`.
+- Use `scenes/prototypes/` to isolate one mechanic or tuning question; do not let prototype scenes become production dependencies by accident.
+- Record retained AI and external assets in `docs/assets/asset_manifest.md`, including module ownership and licensing or source status.
 - A workflow that relies only on MCP can produce a working scene with messy, unmaintainable code.
 - Two agents editing the same files will create confusion quickly.
 - AI can generate code faster than it can judge game feel. Do not ask whether an unfinished framework is fun; run hands-on playtesting when a representative vertical slice is ready.

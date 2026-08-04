@@ -61,7 +61,17 @@ Write-Host "Running health component test..."
 Invoke-Godot --headless --path $projectRoot --script res://tests/health_component_test.gd
 
 Write-Host "Auditing architecture dependencies..."
-powershell -ExecutionPolicy Bypass -File (Join-Path $PSScriptRoot "audit_dependencies.ps1")
+$powerShellExecutable = if ($PSVersionTable.PSEdition -eq "Desktop") {
+    Join-Path $PSHOME "powershell.exe"
+}
+elseif ($env:OS -eq "Windows_NT") {
+    Join-Path $PSHOME "pwsh.exe"
+}
+else {
+    Join-Path $PSHOME "pwsh"
+}
+
+& $powerShellExecutable -ExecutionPolicy Bypass -File (Join-Path $PSScriptRoot "audit_dependencies.ps1")
 if ($LASTEXITCODE -ne 0) {
     throw "Dependency audit failed."
 }

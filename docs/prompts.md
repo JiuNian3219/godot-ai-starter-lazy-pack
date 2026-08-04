@@ -19,6 +19,8 @@ Claude Code、Codex chat 这类工具都只是“有手的 AI 入口”。提示
 - docs/game_development_rules.md
 - docs/architecture_rules.md
 - docs/scene_authoring_rules.md
+- docs/prototype_scene_rules.md
+- docs/assets/asset_manifest.md
 - docs/decisions/
 - docs/lessons/
 - docs/session_handoff.md
@@ -32,13 +34,15 @@ Claude Code、Codex chat 这类工具都只是“有手的 AI 入口”。提示
 2. gameplay 逻辑写在 typed GDScript、可复用组件、Resource 或职责清楚的场景脚本中。
 3. 不要把场景脚本写成大杂烩。
 4. 新增节点前必须按 `docs/scene_authoring_rules.md` 标记为持久场景、运行时或调试节点。UI、碰撞、相机和关卡结构默认必须保存到 `.tscn` 并在编辑器可见；运行时节点要说明创建者、释放时机和不保存理由。
-5. 代码要有简明中文注释：函数作用要注释；关键玩法逻辑、特殊判定、状态切换、时间窗、可调参数、资源加载假设和性能敏感点要注释；自明的一行代码不要硬塞注释。
-6. 开始前说明：当前是基础设施、普通功能还是用户已明确宣布的垂直切片；涉及模块、新文件位置、依赖方向、核心循环影响、验证方式，以及性能/体积/平台/UI/存档风险。只有高风险交互才列简短人工功能冒烟检查；只有垂直切片才列正式试玩 checklist 和手感评价。
-7. 不要随便跨模块 preload/load，不要把大资源放到 shared 里。
-8. 运行 powershell -ExecutionPolicy Bypass -File scripts/verify.ps1，失败就修到通过。
-9. 验证通过后自动提交代码，除非我明确说不要提交。提交前检查 `git status` 和 `git diff`，只 stage 本次任务真正需要提交的文件，不要提交无关用户改动、生成缓存、本地工具、导出产物、`.godot/`、`.tmp/` 或 ignored 文件。
-10. Git commit 使用 Angular/Conventional Commits 规范：`type(scope): short summary`，常用 type 包括 `feat`、`fix`、`test`、`refactor`、`docs`、`chore`、`perf`、`build`、`ci`、`style`、`revert`。
-11. 如果涉及架构、工具、测试策略或踩坑，请更新 docs/decisions、docs/lessons、docs/session_handoff.md。
+5. 机制验证优先建在 `scenes/prototypes/`，遵守 `docs/prototype_scene_rules.md`；不要让原型被正式关卡或主流程依赖。
+6. 新增、替换或保留 AI/外部资产时，更新 `docs/assets/asset_manifest.md`；记录所属模块、来源或模型、许可证状态、导入要求和提示词记录位置。
+7. 代码要有简明中文注释：函数作用要注释；关键玩法逻辑、特殊判定、状态切换、时间窗、可调参数、资源加载假设和性能敏感点要注释；自明的一行代码不要硬塞注释。
+8. 开始前说明：当前是基础设施、普通功能还是用户已明确宣布的垂直切片；涉及模块、新文件位置、依赖方向、核心循环影响、验证方式，以及性能/体积/平台/UI/存档风险。只有高风险交互才列简短人工功能冒烟检查；只有垂直切片才列正式试玩 checklist 和手感评价。
+9. 不要随便跨模块 preload/load，不要把大资源放到 shared 里。
+10. 运行 powershell -ExecutionPolicy Bypass -File scripts/verify.ps1，失败就修到通过；推送后检查 GitHub Actions 结果。
+11. 验证通过后自动提交代码，除非我明确说不要提交。提交前检查 `git status` 和 `git diff`，只 stage 本次任务真正需要提交的文件，不要提交无关用户改动、生成缓存、本地工具、导出产物、`.godot/`、`.tmp/` 或 ignored 文件。
+12. Git commit 使用 Angular/Conventional Commits 规范：`type(scope): short summary`，常用 type 包括 `feat`、`fix`、`test`、`refactor`、`docs`、`chore`、`perf`、`build`、`ci`、`style`、`revert`。
+13. 如果涉及架构、工具、测试策略或踩坑，请更新 docs/decisions、docs/lessons、docs/session_handoff.md。
 
 完成后请报告：
 1. 改了哪些文件。

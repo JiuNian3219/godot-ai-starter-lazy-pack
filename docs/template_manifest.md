@@ -50,11 +50,13 @@ Use `scripts/create_new_project_from_template.ps1` to copy these from this verif
 - `.claude/commands/godot-memory.md`
 - `.mcp.json`
 - `.gitattributes`
+- `.editorconfig`
 - `.gitignore`
 - `AGENTS.md`
 - `CLAUDE.md`
 - `addons/godot_mcp/`
 - `docs/`
+- `.github/workflows/verify.yml`
 - `project.godot`
 - `scenes/`
 - `scripts/`
@@ -100,6 +102,7 @@ The verified template currently checks:
 - main scene load/instantiate smoke test
 - main scene persisted-node contract test
 - HealthComponent behavior test
+- hosted GitHub Actions verification on push and pull request
 
 ## Godot Discovery
 
@@ -115,6 +118,8 @@ The pack keeps prompts intentionally small:
 - `docs/prompts.md`: Chinese prompts for implementation, testing, review, and memory.
 - `docs/engineering_rules.md`: broad engineering quality rules for code, tests, resources, performance, input, UI, data, debugging, and memory.
 - `docs/scene_authoring_rules.md`: node persistence categories and verification requirements for editor-authored scene structure.
+- `docs/prototype_scene_rules.md`: rules for focused, disposable mechanic test scenes.
+- `docs/assets/asset_manifest.md`: retained AI and external asset provenance, ownership, and import ledger.
 - `docs/game_development_rules.md`: game-specific rules for core loop, feel, feedback, input, camera, animation, physics, levels, assets, performance, tuning, and playtesting.
 - `docs/architecture_rules.md`: module boundaries, dependency direction, and packaging-sensitive rules.
 - `.claude/skills/`: Claude Code project skills used after installation.

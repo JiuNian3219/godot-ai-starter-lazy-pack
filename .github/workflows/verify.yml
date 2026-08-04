@@ -1,0 +1,34 @@
+name: Verify Godot Project
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install Godot 4.7.1
+        shell: bash
+        run: |
+          set -euo pipefail
+          godot_version="4.7.1"
+          archive="Godot_v${godot_version}-stable_linux.x86_64.zip"
+          download_url="https://github.com/godotengine/godot-builds/releases/download/${godot_version}-stable/${archive}"
+
+          curl --fail --location --retry 3 --output "$archive" "$download_url"
+          unzip -q "$archive" -d godot-bin
+          chmod +x "godot-bin/Godot_v${godot_version}-stable_linux.x86_64"
+          echo "$GITHUB_WORKSPACE/godot-bin" >> "$GITHUB_PATH"
+
+      - name: Verify project
+        shell: pwsh
+        run: ./scripts/verify.ps1
