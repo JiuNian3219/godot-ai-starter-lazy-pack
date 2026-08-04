@@ -28,6 +28,7 @@ jobs:
           unzip -q "$archive" -d godot-bin
           chmod +x "godot-bin/Godot_v${godot_version}-stable_linux.x86_64"
           echo "$GITHUB_WORKSPACE/godot-bin" >> "$GITHUB_PATH"
+          echo "GODOT_BIN=$GITHUB_WORKSPACE/godot-bin/Godot_v${godot_version}-stable_linux.x86_64" >> "$GITHUB_ENV"
 
       - name: Verify project
         shell: pwsh
