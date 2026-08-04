@@ -21,6 +21,7 @@ Last updated: 2026-08-04
 - The repository root `README.md` is the shareable AI installation entry point. It directs an AI to use the release package or build it from source, ask for Godot-path confirmation, install, and verify.
 - `docs/scene_authoring_rules.md` distinguishes persistent scene, runtime, and debug nodes. `tests/main_scene_contract.gd` proves the template can fail when required editor-visible scene structure is missing.
 - GitHub Actions now downloads Linux Godot 4.7.1 and runs `scripts/verify.ps1`; `.editorconfig`, prototype-scene rules, and the AI asset ledger are part of the template.
+- GitHub Actions run `30921574688` passed on Ubuntu after `GODOT_BIN` was set to the downloaded official Linux executable.
 
 ## Verification
 
@@ -49,7 +50,7 @@ Verify complete.
 - A vertical slice is a polished representative section, not an early framework or first-playable gate. Do not ask users to judge unfinished scaffolding for fun.
 - Dependency audit is intentionally lightweight. It catches obvious `res://` references and large shared assets, but it is not a full Godot dependency graph analyzer.
 - Scene contract tests cover only the paths explicitly asserted for important scenes; they do not infer every intended node automatically.
-- The new Linux CI workflow must be confirmed by its first remote GitHub Actions run; this Windows machine has no local `pwsh` executable for an equivalent host check.
+- This Windows machine has no local `pwsh` executable for an equivalent host check; rely on the successful Linux CI workflow when changing cross-platform PowerShell behavior.
 
 ## Next Suggested Task
 
