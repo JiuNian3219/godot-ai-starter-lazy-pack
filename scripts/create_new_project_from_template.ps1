@@ -71,33 +71,7 @@ else {
     throw "Ask the user to confirm one candidate, then rerun with -GodotBin <confirmed path>."
 }
 
-$copyItems = @(
-    ".github",
-    ".claude",
-    "addons",
-    "docs",
-    "scenes",
-    "scripts",
-    "tests",
-    ".editorconfig",
-    ".gitattributes",
-    ".gitignore",
-    ".mcp.json",
-    "AGENTS.md",
-    "CLAUDE.md",
-    "project.godot"
-)
-
-foreach ($item in $copyItems) {
-    $source = Join-Path $templateRoot $item
-    $dest = Join-Path $targetRoot $item
-    if (Test-Path -LiteralPath $source) {
-        Copy-Item -LiteralPath $source -Destination $dest -Recurse -Force
-    }
-}
-
-Get-ChildItem -LiteralPath $targetRoot -Recurse -Filter "*.uid" -ErrorAction SilentlyContinue |
-    Remove-Item -Force
+& (Join-Path $PSScriptRoot "copy_template.ps1") -SourceRoot $templateRoot -TargetRoot $targetRoot
 
 $projectFile = Join-Path $targetRoot "project.godot"
 $projectText = Get-Content -Raw -Encoding UTF8 -LiteralPath $projectFile
@@ -107,40 +81,6 @@ Set-Content -LiteralPath $projectFile -Value $projectText -Encoding UTF8
 $toolConfigDirectory = Join-Path $targetRoot "tools"
 New-Item -ItemType Directory -Force -Path $toolConfigDirectory | Out-Null
 Set-Content -LiteralPath (Join-Path $toolConfigDirectory "godot-bin.path") -Value $selectedGodotBin -Encoding UTF8
-
-$handoff = @"
-# Session Handoff
-
-Last updated: $(Get-Date -Format "yyyy-MM-dd")
-
-## Current State
-
-- New Godot 4.7.1 AI-assisted project scaffolded from the verified template.
-- Confirmed Godot path is saved locally in ``tools/godot-bin.path`` and is ignored by Git.
-- Godot MCP addon is installed under ``addons/godot_mcp/``.
-- Claude project MCP config is in ``.mcp.json``.
-- Claude project skills exist for feature implementation, testing, review, and project memory.
-- Long-term AI memory exists under ``docs/ai_memory.md``, ``docs/decisions/``, ``docs/lessons/``, and this file.
-
-## Verification
-
-Run:
-
-````powershell
-powershell -ExecutionPolicy Bypass -File scripts\verify.ps1
-````
-
-## Open Risks
-
-- Replace the sample scene/component with your actual first game feature once the project direction is clear.
-- Keep checking ``git diff`` and ``scripts/verify.ps1`` after AI-generated changes.
-
-## Next Suggested Task
-
-Write ``docs/game_brief.md`` with the game type, core loop, first playable target, art direction, and explicit non-goals.
-"@
-
-Set-Content -LiteralPath (Join-Path $targetRoot "docs\session_handoff.md") -Value $handoff -Encoding UTF8
 
 Push-Location $targetRoot
 try {

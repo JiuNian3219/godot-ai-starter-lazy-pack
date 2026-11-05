@@ -1,67 +1,44 @@
-# Godot AI Project Instructions
+# Godot AI 开发规则
 
-This project uses Godot 4.7.1 stable with GDScript.
+本项目使用 Godot 4.7.1 stable 与 GDScript。以下核心要求直接适用于开发，不以工具入口区分。
 
-## Rules
+## 开始任务与按需查阅
 
-- Treat Godot engine version as 4.7.1 unless the user says otherwise.
-- Prefer GDScript for gameplay scripts during prototyping.
-- Write good code first. MCP is only an editor/runtime operation bridge, not a substitute for architecture, readable scripts, tests, or clear data flow.
-- Put gameplay logic in focused scripts, reusable components, resources, and scenes with explicit responsibilities.
-- Keep node scripts small. Extract shared movement, state, inventory, combat, save, or UI logic before a scene script becomes a catch-all file.
-- Use typed GDScript where practical, including typed variables, return types, and exported properties.
-- Add concise Chinese comments for function purpose, important gameplay logic, special cases, timing windows, tunable parameters, and non-obvious Godot behavior. Avoid noisy comments for self-evident one-line code.
-- Do not edit `.godot/`; it is generated cache.
-- Do not edit `project.godot`, `export_presets.cfg`, input maps, autoloads, or plugin settings unless the task explicitly needs it.
-- Prefer editing `.gd` scripts directly. Prefer Godot editor or MCP tools for scene/node operations.
-- Be careful with `.tscn` files: preserve resource paths, node names, signals, and scene ownership.
-- Before adding or changing nodes, read `docs/scene_authoring_rules.md` and classify them as persistent scene, runtime, or debug nodes. Do not create authored UI, collision, camera, or level structure only at runtime when it should be saved and visible in the editor.
-- Before creating a mechanism-only test scene, read `docs/prototype_scene_rules.md`; keep it in `scenes/prototypes/` and prevent it from becoming a production dependency by accident.
-- When adding, replacing, or retaining an AI or external asset, update `docs/assets/asset_manifest.md` and its prompt record when applicable. Do not record caches or transient screenshots.
-- After code or scene changes, run `powershell -ExecutionPolicy Bypass -File scripts/verify.ps1`.
-- After every code-changing task, if verification passes and the user did not explicitly forbid committing, create a Git commit using the Angular/Conventional Commits style. Stage only files that are necessary for the completed task.
-- Keep scenes small and composable. Avoid deep node paths when signals or exported NodePath fields are cleaner.
-- Use Git before risky changes. Do not revert user changes without being asked.
-- For medium or large tasks, read `docs/ai_memory.md`, relevant `docs/decisions/`, relevant `docs/lessons/`, and `docs/session_handoff.md` before changing architecture or workflow.
-- Before medium or large work, read `docs/engineering_rules.md`. For gameplay, input, camera, animation, physics, levels, assets, performance, or game-feel work, also read `docs/game_development_rules.md`. Before adding new gameplay/UI/resource files, also read `docs/architecture_rules.md` and identify the module boundary and allowed dependency direction.
+- 开始任务先读 `docs/errors/index.md`。根据需求、计划操作和涉及文件匹配关键词与适用操作；命中后必须先读对应记录再执行。不必读取未命中的全文；任务范围扩大时重新匹配。关键词是线索，不能只按用户是否说出某个字判断。
+- 中大型任务读 `docs/engineering_rules.md`；涉及玩法、输入、相机、动画、物理、关卡、资源、性能或手感时读 `docs/game_development_rules.md`；新增玩法/UI/资源文件或改变依赖时读 `docs/architecture_rules.md`；机制原型读 `docs/prototype_scene_rules.md`。
+- 开始前用简短说明明确范围、阶段、相关模块和验证方式；只展开与本次任务相关的风险。事实不清时先查代码，影响实现的需求歧义先澄清。
 
-## Agent workflow
+## 代码首先表达玩法逻辑
 
-- Claude Code and Codex chat are AI tool entries with hands on the workspace.
-- The current active AI agent may implement, test, refactor, review, explain, or update memory.
-- Pick one active writing agent per task. Another AI entry can review, explain, or take over after the first agent stops.
-- Do not let two AI agents edit the same files at the same time.
-- When handing work from one agent to another, share the changed files, verification output, open risks, and relevant `docs/session_handoff.md` notes.
-- Claude Code has project-local skills under `.claude/skills/`. Codex follows `AGENTS.md`, `docs/ai_workflow.md`, `docs/ai_memory.md`, and the user's latest instructions.
+- 人应能从负责该行为的代码入口看清条件、关键计算、状态修改和结果，并据此核对需求。重要玩法规则不要藏进含糊命名、多层转发或不明确的信号链；也不要把所有逻辑塞进一个函数。
+- 阅读顺序应贴近玩法发生顺序。结算、回合、状态转换中明确先后依赖、等待、提前结束与副作用时机；不能为简短而把顺序行为并发化。
+- 为重要中间结果使用有玩法含义的名称，缩小变量作用范围；重要状态有明确所有者，展示状态与玩法状态区分，减少同时追踪多个可变状态的负担。
+- 封装固定参数、稳定重复知识和独立机制；抽象必须降低理解成本。保持职责清晰，但不为函数短、层次多而拆分，也不为一处使用创建无收益的转发层。
+- 根据行为选择转换、筛选、查找、聚合或顺序循环。不禁止某个 API，也不为少遍历一次把多个无关结果揉在一起；有性能证据时再做必要优化。
+- 外部数据在边界验证或规范化，内部使用明确契约。真实业务失败必须处理；不要用到处兜底或静默返回掩盖不应出现的状态。
+- 基建期先明确已知概念、责任和数据流，只实现当前范围；稳定开发期沿现有结构局部修改；真实规律稳定后再抽象，收尾期优先稳定。TODO 只记录已知延期事项的当前边界、触发条件和未定内容，不替代当前功能或提前实现假想需求。
+- 优先 typed GDScript、职责清楚的场景脚本、组件和 Resource。可调数据集中在导出属性、Resource 或配置中；避免深层硬编码 NodePath，合理使用信号或显式引用，同时保持关键执行顺序可追踪。
+- 自定义函数除纯自明函数外写简短中文用途注释；关键判定、状态转换、时间窗、可调参数、加载假设和性能敏感点解释必要原因。不要逐行翻译代码，也不要用注释补救难以理解的结构。
 
-## Code quality baseline
+## 场景、资源与修改边界
 
-- Name nodes, scenes, scripts, signals, and exported properties clearly.
-- Avoid hard-coded deep paths such as `$UI/Panel/VBox/Button` in gameplay code when an exported NodePath, signal, group, or injected reference is cleaner.
-- Prefer data-driven resources for tunable game data.
-- Keep every AI-generated script understandable enough that a human learner can read it and modify it.
-- Every custom function should have a short Chinese comment explaining its purpose unless the function is purely trivial. Special logic branches, gameplay judgement windows, state transitions, resource-loading assumptions, and performance-sensitive code must be commented in Chinese.
-- When implementing a feature, include a short explanation of the important Godot concepts used.
-- Avoid accidental package bloat: do not put large assets in `shared` unless every package truly needs them.
-- Avoid cross-module `preload()` / `load()` unless the dependency is allowed by `docs/architecture_rules.md`.
-- For game-feel, UI, performance, platform, resource-size, save/data, or input changes, include the relevant engineering risks from `docs/engineering_rules.md`.
-- For gameplay changes, report the core loop impact, tunable parameters, and placeholder feedback/assets. Include a manual functional smoke check only when the changed interaction needs one; reserve a full playtest checklist and feel judgement for an explicitly declared vertical-slice milestone.
+- MCP 用于编辑器与运行时操作、场景检查、截图和错误读取；玩法实现优先直接编辑 GDScript，MCP 不替代代码设计。
+- 新增或修改节点先命中并读取 Error E006。UI、碰撞、相机和关卡等应可编辑的结构必须保存到 `.tscn`；运行时节点必须有合理的动态原因和明确生命周期，重要场景验证持久节点。保留资源路径、节点名、信号和所有权。
+- 不修改 `.godot/`；只有当前任务需要时才改 `project.godot`、导出配置、输入映射、autoload 或插件设置。
+- 按架构规范限制跨模块依赖和 `preload/load`，共享层不能反向依赖具体功能；大资源只有确实共享才放入 shared。
+- 保留的 AI/外部素材随新增、替换同步更新 `docs/assets/asset_manifest.xlsx`。来源与许可证未知时标为待确认，不能冒充已确认发行资源。提示词记录可选；不登记缓存或临时截图。修改台账失败时保留原文件并报告待登记信息，不另建第二份权威台账。
+- 同一任务一个活跃写入 agent；切换前停止原写入者。保护用户已有改动，未经要求不得回退；风险修改前用 Git 保留检查点。
 
-## Git commit baseline
+## 验证、审查与交付
 
-- Commit automatically after a code-changing task is complete and `scripts/verify.ps1` passes.
-- Do not commit after pure review, explanation, planning, or failed verification.
-- Inspect `git status` and `git diff` before staging.
-- Stage only files that belong to the current task. Prefer explicit path staging such as `git add -- scripts/player.gd tests/player_test.gd`.
-- Do not stage unrelated user changes, generated caches, local tools, exports, builds, `.godot/`, `.tmp/`, or ignored files.
-- Use Angular/Conventional Commits format: `type(scope): short summary`.
-- Allowed common types: `feat`, `fix`, `test`, `refactor`, `docs`, `chore`, `perf`, `build`, `ci`, `style`, `revert`.
-- Use a concise English commit subject unless the user asks otherwise. Examples: `feat(player): add dash stamina recovery`, `test(combat): cover guard timing window`.
-- Report the commit hash after committing. If committing is impossible because Git identity or repository state is missing, report the blocker clearly.
+- 代码或场景变更后运行 `powershell -ExecutionPolicy Bypass -File scripts/verify.ps1`；验证失败须修复或如实报告阻塞，不能用总结文字代替证据。推送后检查 GitHub Actions，不能以本地通过忽略 CI 失败。
+- 审查 diff 时检查：玩法规则在哪里、顺序是否正确、数据来源和状态归属是否清楚、异常是否真实、抽象是否减少跳转成本；只报告关键取舍，不产生逐条打卡文档。
+- 基础设施与普通功能以相称的技术验证为主；交互需要时做简短人工功能检查。只有用户明确宣布垂直切片里程碑才组织正式试玩和整体手感评价，不要求评价未完成框架是否好玩。
+- 代码修改完成且验证通过后，除非用户禁止，自动创建本次作用域的 Git 提交；纯审查、解释、计划或验证失败不提交。提交前检查 `git status`、`git diff`，显式暂存相关路径，不带入无关改动、缓存、本地工具、构建或导出物。
+- 使用 Angular/Conventional Commits：`type(scope): short summary`，默认简短英文标题。常用类型为 feat、fix、test、refactor、docs、chore、perf、build、ci、style、revert。报告提交 hash；无法提交时说明原因。
+- 完成后在聊天中报告改动、验证结果、剩余风险和必要的 Godot 概念；玩法变更说明核心循环影响、可调参数及占位反馈/资源。
 
-## Long-term memory
+## 文档由用户主导整理
 
-- Record durable architecture/tooling/workflow decisions in `docs/decisions/`.
-- Record repeatable mistakes and gotchas in `docs/lessons/`.
-- Update `docs/session_handoff.md` after substantial AI-assisted work.
-- If verification gives a false positive or AI repeats a bad pattern, update prompts, skills, or verification scripts so the project improves.
+- 不在每次任务后自动新增总结、决策、错误经验或交接文档，不自行修改长期规则。新经验可在聊天中提出候选，收录与整理由用户决定。
+- 用户明确要求时才整理文档或交接。已有操作说明因当前修改而失真时可就地修正；资产台账作为来源事实随素材变更维护，不属于自动经验总结。

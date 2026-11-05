@@ -14,6 +14,6 @@ Local Windows validation used a project-local console executable and did not exe
 
 After changing CI setup, inspect the first GitHub Actions run and confirm `scripts/verify.ps1` reports the expected Godot version before its import step.
 
-## Rule Added
+## Prevention and verification
 
 The GitHub Actions install step writes the official Linux executable path to `GODOT_BIN`. Keep CI engine discovery explicit instead of relying on an extracted filename or PATH alias.

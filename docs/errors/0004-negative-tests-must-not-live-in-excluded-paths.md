@@ -14,7 +14,6 @@ Validation of validation tools must use paths that the tool actually scans. Othe
 
 When testing audit scripts, place temporary fixtures outside ignored directories or explicitly account for ignore rules.
 
-## Rule Added
+## Prevention and verification
 
 Dependency audit negative checks should use a non-excluded temporary directory and delete it after the check.
-

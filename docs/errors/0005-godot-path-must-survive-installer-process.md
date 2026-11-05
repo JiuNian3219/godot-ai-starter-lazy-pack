@@ -14,6 +14,6 @@ An installation check is not meaningful if ordinary project commands cannot repe
 
 After installing, clear `GODOT_BIN` and run `powershell -ExecutionPolicy Bypass -File scripts\verify.ps1` from a new PowerShell process.
 
-## Rule Added
+## Prevention and verification
 
 Ask the user to confirm an auto-discovered Godot 4.7.1 executable during installation, then save it to ignored `tools/godot-bin.path`. All project scripts resolve this saved path first.

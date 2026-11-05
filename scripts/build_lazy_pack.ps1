@@ -48,40 +48,8 @@ function Resolve-BundledGodot {
     return $resolvedPath
 }
 
-$copyItems = @(
-    ".github",
-    ".claude",
-    "addons",
-    "docs",
-    "scenes",
-    "scripts",
-    "tests",
-    ".editorconfig",
-    ".gitattributes",
-    ".gitignore",
-    ".mcp.json",
-    "AGENTS.md",
-    "CLAUDE.md",
-    "project.godot"
-)
-
-foreach ($item in $copyItems) {
-    $source = Join-Path $repoRoot $item
-    $dest = Join-Path $templateRoot $item
-    if (Test-Path -LiteralPath $source) {
-        Copy-Item -LiteralPath $source -Destination $dest -Recurse -Force
-    }
-}
-
-foreach ($localOnlyDir in @(".git", ".godot", ".tmp", "dist")) {
-    $path = Join-Path $templateRoot $localOnlyDir
-    if (Test-Path -LiteralPath $path) {
-        Remove-Item -Recurse -Force -LiteralPath $path
-    }
-}
-
-Get-ChildItem -LiteralPath $templateRoot -Recurse -Force -Filter "*.uid" |
-    Remove-Item -Force
+& (Join-Path $PSScriptRoot "copy_template.ps1") -SourceRoot $repoRoot -TargetRoot $templateRoot
+Copy-Item -LiteralPath (Join-Path $PSScriptRoot "copy_template.ps1") -Destination (Join-Path $packRoot "copy_template.ps1")
 
 if ($IncludeGodot) {
     $bundledGodotConsole = Resolve-BundledGodot -CandidatePath $GodotBin
@@ -240,34 +208,7 @@ else {
 
 Write-Host "Using confirmed Godot:" $selectedGodotBin
 
-$copyItems = @(
-    ".github",
-    ".claude",
-    "addons",
-    "docs",
-    "scenes",
-    "scripts",
-    "tests",
-    "tools",
-    ".editorconfig",
-    ".gitattributes",
-    ".gitignore",
-    ".mcp.json",
-    "AGENTS.md",
-    "CLAUDE.md",
-    "project.godot"
-)
-
-foreach ($item in $copyItems) {
-    $source = Join-Path $templateRoot $item
-    $dest = Join-Path $targetRoot $item
-    if (Test-Path -LiteralPath $source) {
-        Copy-Item -LiteralPath $source -Destination $dest -Recurse -Force
-    }
-}
-
-Get-ChildItem -LiteralPath $targetRoot -Recurse -Filter "*.uid" -ErrorAction SilentlyContinue |
-    Remove-Item -Force
+& (Join-Path $packRoot "copy_template.ps1") -SourceRoot $templateRoot -TargetRoot $targetRoot -CopyBundledTools
 
 $projectFile = Join-Path $targetRoot "project.godot"
 $projectText = Get-Content -Raw -Encoding UTF8 -LiteralPath $projectFile
@@ -287,42 +228,6 @@ if (Test-Path -LiteralPath $templateToolsDirectory) {
 $toolConfigDirectory = Join-Path $targetRoot "tools"
 New-Item -ItemType Directory -Force -Path $toolConfigDirectory | Out-Null
 Set-Content -LiteralPath (Join-Path $toolConfigDirectory "godot-bin.path") -Value $projectGodotBin -Encoding UTF8
-
-$handoff = @"
-# Session Handoff
-
-Last updated: $(Get-Date -Format "yyyy-MM-dd")
-
-## Current State
-
-- New Godot 4.7.1 AI-assisted project scaffolded from GodotAIStarterLazyPack.
-- Confirmed Godot path is saved locally in ``tools/godot-bin.path`` and is ignored by Git.
-- Godot MCP addon is installed under ``addons/godot_mcp/``.
-- Project MCP config is in ``.mcp.json``.
-- AI tool adapters are available: ``.mcp.json`` and ``.claude/skills/``.
-- Shared project rules are available under ``AGENTS.md`` and ``docs/``.
-- Long-term AI memory exists under ``docs/ai_memory.md``, ``docs/decisions/``, ``docs/lessons/``, and this file.
-
-## Verification
-
-Run:
-
-````powershell
-powershell -ExecutionPolicy Bypass -File scripts\verify.ps1
-````
-
-## Open Risks
-
-- Replace the sample scene/component with your actual first game feature once the project direction is clear.
-- Keep checking ``git diff`` and ``scripts/verify.ps1`` after AI-generated changes.
-- Pick only one active writing agent per task.
-
-## Next Suggested Task
-
-Write ``docs/game_brief.md`` with the game type, core loop, first playable target, art direction, and explicit non-goals.
-"@
-
-Set-Content -LiteralPath (Join-Path $targetRoot "docs\session_handoff.md") -Value $handoff -Encoding UTF8
 
 Push-Location $targetRoot
 try {
@@ -354,6 +259,10 @@ finally {
 
 Set-Content -LiteralPath (Join-Path $packRoot "install.ps1") -Value $installScript -Encoding UTF8
 
+# 安装资料留在发行包外层，不复制到游戏项目。
+Copy-Item -LiteralPath (Join-Path $repoRoot "docs/next_project_prompt.md") -Destination (Join-Path $packRoot "INSTALL.md")
+Copy-Item -LiteralPath (Join-Path $repoRoot "docs/template_manifest.md") -Destination (Join-Path $packRoot "TEMPLATE_MANIFEST.md")
+
 $readme = Get-Content -Raw -Encoding UTF8 -LiteralPath (Join-Path $repoRoot "docs\lazy_pack_README_CN.md")
 
 Set-Content -LiteralPath (Join-Path $packRoot "README_CN.md") -Value $readme -Encoding UTF8
@@ -379,4 +288,3 @@ Write-Host "Lazy pack built:" $packRoot
 Write-Host "Zip:" $zipPath
 Write-Host "SHA-256:" $zipHashPath
 exit 0
-

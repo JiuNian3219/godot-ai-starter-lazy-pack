@@ -14,7 +14,6 @@ A missing summary does not mean no work happened. Conversely, a nice summary wou
 
 Always inspect `git status`, relevant diffs, and verification output after a non-interactive Claude Code run.
 
-## Rule Added
+## Prevention and verification
 
 Treat `git diff` plus `scripts/verify.ps1` as the source of truth. Do not use agent summary text as the final acceptance signal.
-

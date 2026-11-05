@@ -1,8 +1,29 @@
-# 场景节点持久化规范
+# 0006 Runtime Nodes Do Not Replace Scene Authoring
+
+Date: 2026-08-04
+
+## What Happened
+
+AI-generated Godot code created nodes in `_ready()` or other runtime paths when the user expected to see and edit them in the Godot scene tree.
+
+## Why It Matters
+
+The game can appear to work while layout, collisions, cameras, and level structure remain hidden in scripts. This makes tuning, reviews, scene reuse, and later content production harder.
+
+## Detection
+
+Compare the changed `.tscn` file, inspect the editor scene tree, and run a focused scene contract test that asserts required persisted node paths.
+
+## Prevention and verification
+
+Classify nodes as persistent scene, runtime, or debug before implementation. Persistent authored structure must be saved to `.tscn`; runtime nodes must document why they are dynamic and when they are freed.
+
+
+## 场景节点处理要求
 
 Godot 中运行时节点和保存在场景文件里的节点都是真实节点，但用途不同。不要因为运行时能看到某个节点，就把它误当成可在编辑器中维护的场景结构。
 
-## 节点分类
+### 节点分类
 
 每次新增或修改节点前，先在任务说明中标记其类别和理由：
 
@@ -14,24 +35,24 @@ Godot 中运行时节点和保存在场景文件里的节点都是真实节点�
 
 默认选择持久场景节点。只有节点的数量、内容或生命周期由运行时数据决定时，才选择运行时节点。
 
-## 持久场景节点
+### 持久场景节点
 
 1. 优先通过 Godot 编辑器或 MCP 创建、调整并保存节点；完成后确认场景树和 `.tscn` 都包含该节点。
 2. 不要为了少编辑一个场景，在 `_ready()` 中用 `Node.new()`、`add_child()` 拼出 UI、碰撞、相机或关卡结构。
 3. 无法使用编辑器时才谨慎直接编辑 `.tscn`；保留资源路径、节点名、信号和所有权，并在修改后运行验证。
 4. 重要场景必须在 `tests/` 中有持久结构断言，例如断言根节点类型和必须存在的子节点路径。运行时脚本创建的节点不能替代这类断言。
 
-## 运行时节点
+### 运行时节点
 
 1. 在创建代码附近用中文注释说明它为何不能预先放入场景、由谁创建、何时释放。
 2. 对高频生成对象评估实例化和释放成本；需要时采用对象池，但不要提前为低频对象增加对象池。
 3. 不要依赖运行时临时节点承担编辑器可调的布局、碰撞层或关卡设计数据。
 
-## 编辑器自动生成
+### 编辑器自动生成
 
 `@tool` 或编辑器脚本只用于可重复生成的内容。它必须可重复执行而不产生重复节点，并正确设置节点 owner 后保存场景。默认不要用它替代普通的场景编辑；涉及批量生成时先说明生成规则和清理方式。
 
-## 修改后的验证
+### 修改后的验证
 
 1. 检查 `git diff -- <scene>.tscn`，确认应持久化的节点实际写入场景文件。
 2. 在 Godot 编辑器中重新打开或通过 MCP 检查场景树，确认节点路径和类型。

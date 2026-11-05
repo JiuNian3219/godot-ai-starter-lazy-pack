@@ -14,7 +14,6 @@ AI agents stop when work appears complete. A verification script that prints suc
 
 Every external Godot command in `scripts/verify.ps1` must be run through a wrapper that checks `$LASTEXITCODE`.
 
-## Rule Added
+## Prevention and verification
 
 `scripts/verify.ps1` now uses `Invoke-Godot` and throws when Godot exits with a non-zero status.
-

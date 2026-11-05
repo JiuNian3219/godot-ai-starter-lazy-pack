@@ -14,7 +14,6 @@ Signal tests can silently test the wrong behavior if the counter pattern is unre
 
 When testing signals in lightweight SceneTree scripts, use mutable containers such as arrays or dictionaries for counters.
 
-## Rule Added
+## Prevention and verification
 
 Signal count tests should use patterns like `var count := [0]` and mutate `count[0]`.
-

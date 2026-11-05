@@ -1,96 +1,26 @@
-# 懒人包安装提示词
+# 懒人包安装说明（给安装 AI）
 
-开新项目时，把下面这段提示词给当前 AI agent。
+按已提供的模板创建新 Godot 项目，不临场重写规则、配置或场景。本文件只用于安装，不进入新游戏项目。
 
-```text
-你的任务不是手写 AGENTS.md、CLAUDE.md、Claude skills、MCP 配置或 Godot 场景。这些内容已经在 GodotAIStarterLazyPack.zip 里。
+## 安装步骤
 
-请按下面流程做：
+1. 确认 Git、Git LFS、Node.js、npm、npx 可用，报告版本。Claude Code 可选，缺少它不阻塞安装；可用支持 AGENTS 的其他 AI 入口。不安装未知技能，不默认跳过权限检查，不要求 Codex CLI。
+2. 从本仓库 Release 取得 ZIP；使用源码时按仓库 README 构建。含引擎包为 `GodotAIStarterLazyPack-Godot-4.7.1-win64.zip`；轻量包为 `GodotAIStarterLazyPack.zip`。解压到临时目录，不把模板仓库或包目录当作游戏项目。
+3. 运行包内 `template/scripts/find_godot_candidates.ps1`，列出 Godot 4.7.1 候选的版本和绝对路径。即使只有一个也先让用户确认；找不到才请用户提供路径。不得静默选用。
+4. 用户确认后，在包根目录运行安装器，替换以下占位路径：
 
-1. 确认本机硬依赖版本：
-   ```powershell
-   git --version
-   git lfs version
-   node --version
-   npm --version
-   npx --version
-   ```
-
-2. 检查可选 Claude Code 入口。缺少它不应该阻塞安装：
-   ```powershell
-   claude --version
-   ```
-   如果命令不存在，只要报告“未安装/未在 PATH”，不要把它当成失败。
-
-3. 找到懒人包 zip：
-   ```text
-   GodotAIStarterLazyPack.zip
-   ```
-
-4. 解压懒人包到临时目录，例如：
-   ```powershell
-   Expand-Archive -LiteralPath "C:\path\to\GodotAIStarterLazyPack.zip" -DestinationPath "C:\path\to\GodotAIStarterLazyPack" -Force
-   ```
-
-5. 主动查找本机可用的 Godot 4.7.1 stable，不要一开始要求我手填路径：
-   ```powershell
-   powershell -ExecutionPolicy Bypass -File "C:\path\to\GodotAIStarterLazyPack\template\scripts\find_godot_candidates.ps1"
-   ```
-   - 先报告找到的候选项及版本。
-   - 无论只找到一个还是多个候选项，都向我确认要使用哪一个；不要静默选择。
-   - 找不到兼容版本时，再说明搜索范围并请我提供路径。
-
-6. 收到我的确认后，运行懒人包里的安装脚本。把确认过的绝对路径传给 `-GodotBin`：
-   ```powershell
-   powershell -ExecutionPolicy Bypass -File "C:\path\to\GodotAIStarterLazyPack\install.ps1" -TargetPath "C:\path\to\new-game" -ProjectName "New Game" -GodotBin "C:\confirmed\path\to\Godot_v4.7.1-stable_win64_console.exe"
-   ```
-   安装脚本会将该路径保存到新项目被 Git 忽略的 `tools\godot-bin.path`；之后的新终端不依赖临时环境变量。
-
-7. 安装脚本成功后，进入新项目目录，运行：
-   ```powershell
-   powershell -ExecutionPolicy Bypass -File scripts\verify.ps1
-   ```
-
-8. 检查新项目里这些 AI 工具适配文件是否存在：
-   - `.mcp.json`
-   - `.claude/skills/godot-feature/SKILL.md`
-   - `.claude/skills/godot-test/SKILL.md`
-   - `.claude/skills/godot-review/SKILL.md`
-   - `.claude/skills/godot-memory/SKILL.md`
-
-9. 检查新项目里这些通用文件是否存在：
-   - `AGENTS.md`
-   - `CLAUDE.md`
-   - `docs/prompts.md`
-   - `docs/template_manifest.md`
-   - `docs/engineering_rules.md`
-   - `docs/game_development_rules.md`
-   - `docs/architecture_rules.md`
-   - `addons/godot_mcp/plugin.cfg`
-   - `scripts/verify.ps1`
-
-最终输出：
-- 硬依赖版本检查结果。
-- 可选 AI 工具入口检查结果。
-- 用户确认的 Godot 路径，以及 `tools\godot-bin.path` 是否存在。
-- 新项目路径。
-- `verify.ps1` 是否通过。
-- MCP、skills、rules 适配文件是否存在。
-- 仍需要我人工处理的事情。
-
-硬性约束：
-- 不要重新生成模板内容。
-- 不要下载或安装未知 skill 包。
-- 不要使用 Codex CLI。
-- 不要默认使用 `--dangerously-skip-permissions`。
-- 如果硬依赖缺失，先报告缺什么，不要绕过验证。
-- 没有经过用户确认的 Godot 路径时，不要开始安装或用 `-SkipVerify` 伪造成功。
+```powershell
+powershell -ExecutionPolicy Bypass -File .\install.ps1 -TargetPath "C:\path\to\new-game" -ProjectName "New Game" -GodotBin "C:\confirmed\Godot_v4.7.1-stable_win64_console.exe"
 ```
 
-## 安装后
+项目名可省略，此时取目标目录名。只用于新项目，不用重新安装覆盖已有游戏。必须使用确认后的绝对路径，不用 `-SkipVerify` 伪造成功；缺依赖或验证失败时报告实际问题。
 
-安装通过后，在新项目里使用：
+5. 在新项目目录启动新的 PowerShell 进程，清除该进程的临时 `GODOT_BIN` 后运行 `scripts/verify.ps1`，确认引擎路径由被 Git 忽略的 `tools/godot-bin.path` 持久保存。含引擎安装应指向新项目内复制的引擎，而非临时解压目录。
+6. 检查新项目有 `AGENTS.md`、四份专项规则、`docs/errors/index.md` 与七条有效链接、`docs/assets/asset_manifest.xlsx`、`.mcp.json`、Godot MCP addon、验证脚本和示例测试。开发内容清单以包外层 `copy_template.ps1` 为准。
+7. 检查安装说明、包维护资料、工具专用技能、自动记忆和交接文件没有进入新项目。不要生成游戏策划、总结或新经验文档。
 
-- `docs/prompts.md`：通用任务提示词。
-- `.claude/skills/`：Claude Code 可识别的项目技能。
-- `AGENTS.md` 与 `docs/`：所有 AI agent 的共享规则。
+## 安装报告
+
+在聊天中报告依赖版本、用户确认的引擎路径、实际保存的引擎路径、新项目路径、验证结果、开发内容检查结果及待人工处理事项。不把本报告写入新项目。
+
+安装后用户直接描述开发任务。AI 读取 AGENTS 和 Error 索引，按命中范围查阅记录及专项规则；不需要复制额外日常提示词。
