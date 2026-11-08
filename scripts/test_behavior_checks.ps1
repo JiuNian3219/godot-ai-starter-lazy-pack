@@ -93,3 +93,6 @@ finally {
         Remove-Item -LiteralPath $resolvedScratch -Recurse -Force
     }
 }
+
+# Expected negative cases leave LASTEXITCODE=1; report this script's result to CI.
+exit 0
