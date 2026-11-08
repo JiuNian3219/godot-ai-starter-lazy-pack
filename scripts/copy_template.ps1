@@ -14,7 +14,7 @@ $projectItems = @(
     "scripts/main.gd",
     "scripts/verify.ps1", "scripts/audit_dependencies.ps1",
     "scripts/resolve-godot.ps1", "scripts/find_godot_candidates.ps1",
-    "scripts/open_editor.ps1", "scripts/run_game.ps1",
+    "scripts/open_editor.ps1", "scripts/run_game.ps1", "scripts/record_game.ps1",
     ".editorconfig", ".gitattributes", ".gitignore", ".mcp.json", "AGENTS.md", "project.godot",
     "docs/engineering_rules.md", "docs/game_development_rules.md",
     "docs/architecture_rules.md", "docs/prototype_scene_rules.md",
@@ -28,11 +28,31 @@ $projectItems = @(
     "docs/errors/0007-ci-must-set-godot-bin.md"
 )
 
+# 目录存在不代表插件完整；这些是当前随包提供的 MCP 插件必需文件。
+$pluginFiles = @(
+    "addons/godot_mcp/plugin.cfg", "addons/godot_mcp/plugin.gd",
+    "addons/godot_mcp/mcp_client.gd", "addons/godot_mcp/tool_executor.gd",
+    "addons/godot_mcp/runtime/mcp_runtime.gd",
+    "addons/godot_mcp/tools/file_tools.gd", "addons/godot_mcp/tools/scene_tools.gd",
+    "addons/godot_mcp/tools/script_tools.gd", "addons/godot_mcp/tools/project_tools.gd",
+    "addons/godot_mcp/tools/asset_tools.gd", "addons/godot_mcp/tools/visualizer_tools.gd",
+    "addons/godot_mcp/utils/paths.gd", "addons/godot_mcp/utils/variant_codec.gd"
+)
+
+# 先完成预检，避免缺文件时已经向目标目录复制了一部分内容。
 foreach ($item in $projectItems) {
     $source = Join-Path $SourceRoot $item
     if (-not (Test-Path -LiteralPath $source)) {
         throw "Required template content missing: $item"
     }
+}
+foreach ($item in $pluginFiles) {
+    if (-not (Test-Path -LiteralPath (Join-Path $SourceRoot $item) -PathType Leaf)) {
+        throw "Required template content missing: $item"
+    }
+}
+foreach ($item in $projectItems) {
+    $source = Join-Path $SourceRoot $item
     $destination = Join-Path $TargetRoot $item
     New-Item -ItemType Directory -Force -Path (Split-Path -Parent $destination) | Out-Null
     Copy-Item -LiteralPath $source -Destination $destination -Recurse -Force

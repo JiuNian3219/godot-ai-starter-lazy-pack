@@ -1,4 +1,5 @@
 extends SceneTree
+## 示例行为测试；替换或删除 HealthComponent 时同步调整，不是所有游戏必须保留的契约。
 
 var _passed := 0
 var _failed := 0

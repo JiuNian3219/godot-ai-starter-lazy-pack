@@ -1,4 +1,4 @@
-param(
+﻿param(
     [string[]]$ProjectPaths = @()
 )
 
@@ -11,15 +11,26 @@ $copyScript = Join-Path $PSScriptRoot "copy_template.ps1"
 function Assert-ProjectContent {
     param([string]$Root)
 
-    foreach ($required in @("AGENTS.md", ".mcp.json", "project.godot", "scripts/verify.ps1", "docs/assets/asset_manifest.xlsx", "docs/errors/index.md")) {
-        if (-not (Test-Path -LiteralPath (Join-Path $Root $required))) {
+    foreach ($required in @(
+        "AGENTS.md", ".mcp.json", "project.godot", "scripts/verify.ps1", "scripts/record_game.ps1", "docs/assets/asset_manifest.xlsx", "docs/errors/index.md",
+        "addons/godot_mcp/plugin.cfg", "addons/godot_mcp/plugin.gd", "addons/godot_mcp/mcp_client.gd",
+        "addons/godot_mcp/tool_executor.gd", "addons/godot_mcp/runtime/mcp_runtime.gd",
+        "addons/godot_mcp/tools/file_tools.gd", "addons/godot_mcp/tools/scene_tools.gd",
+        "addons/godot_mcp/tools/script_tools.gd", "addons/godot_mcp/tools/project_tools.gd",
+        "addons/godot_mcp/tools/asset_tools.gd", "addons/godot_mcp/tools/visualizer_tools.gd",
+        "addons/godot_mcp/utils/paths.gd", "addons/godot_mcp/utils/variant_codec.gd"
+    )) {
+        if (-not (Test-Path -LiteralPath (Join-Path $Root $required) -PathType Leaf)) {
             throw "Missing project content: $required in $Root"
         }
     }
-    foreach ($retired in @("CLAUDE.md", ".claude", "docs/decisions", "docs/lessons", "docs/ai_memory.md", "docs/ai_workflow.md", "docs/session_handoff.md", "docs/prompts.md", "docs/next_project_prompt.md", "docs/lazy_pack_README_CN.md", "docs/template_manifest.md", "docs/assets/asset_manifest.md", "scripts/ai_context.ps1", "scripts/build_lazy_pack.ps1", "scripts/create_new_project_from_template.ps1")) {
+    foreach ($retired in @(".claude", "docs/decisions", "docs/lessons", "docs/ai_memory.md", "docs/ai_workflow.md", "docs/session_handoff.md", "docs/prompts.md", "docs/next_project_prompt.md", "docs/lazy_pack_README_CN.md", "docs/template_manifest.md", "docs/assets/asset_manifest.md", "scripts/ai_context.ps1", "scripts/build_lazy_pack.ps1", "scripts/create_new_project_from_template.ps1", "scripts/test_verification.ps1")) {
         if (Test-Path -LiteralPath (Join-Path $Root $retired)) {
             throw "Non-project content leaked: $retired in $Root"
         }
+    }
+    foreach ($maintenance in @("maintenance", "scripts/prepare_behavior_case.ps1", "scripts/test_behavior_checks.ps1", "scripts/test_recording.ps1")) {
+        if (Test-Path -LiteralPath (Join-Path $Root $maintenance)) { throw "Maintenance content leaked: $maintenance in $Root" }
     }
 
     $indexPath = Join-Path $Root "docs/errors/index.md"
@@ -40,23 +51,38 @@ try {
     Set-Content -LiteralPath (Join-Path $fixture "docs/installation-only.md") -Value "Must not enter a game project." -Encoding UTF8
     New-Item -ItemType Directory -Path (Join-Path $fixture ".claude") | Out-Null
     Set-Content -LiteralPath (Join-Path $fixture ".claude/settings.json") -Value '{}' -Encoding UTF8
+    Set-Content -LiteralPath (Join-Path $fixture "CLAUDE.md") -Value "Source-local instructions, not distributed." -Encoding UTF8
     & $copyScript -SourceRoot $fixture -TargetRoot $target
     Assert-ProjectContent -Root $target
     if (Test-Path -LiteralPath (Join-Path $target "docs/installation-only.md")) {
         throw "Unlisted documentation was copied."
     }
+    if (Test-Path -LiteralPath (Join-Path $target "CLAUDE.md")) {
+        throw "Source-local CLAUDE.md was copied."
+    }
+    # 不分发 CLAUDE.md，不等于禁止用户在自己的项目中创建它。
+    Set-Content -LiteralPath (Join-Path $target "CLAUDE.md") -Value "User-owned instructions." -Encoding UTF8
+    Assert-ProjectContent -Root $target
 
-    # A missing required workbook must fail instead of silently creating an incomplete project.
-    Remove-Item -LiteralPath (Join-Path $fixture "docs/assets/asset_manifest.xlsx")
-    $missingFileRejected = $false
-    try {
-        & $copyScript -SourceRoot $fixture -TargetRoot (Join-Path $scratchRoot "incomplete")
+    # 每轮恢复源文件，分别验证台账、插件入口和依赖缺失，并确保失败发生在复制前。
+    foreach ($missing in @("docs/assets/asset_manifest.xlsx", "scripts/record_game.ps1", "addons/godot_mcp/plugin.cfg", "addons/godot_mcp/plugin.gd", "addons/godot_mcp/utils/paths.gd", "addons/godot_mcp/runtime/mcp_runtime.gd")) {
+        $missingPath = Join-Path $fixture $missing
+        $backup = [IO.File]::ReadAllBytes($missingPath)
+        Remove-Item -LiteralPath $missingPath
+        $missingFileRejected = $false
+        try {
+            & $copyScript -SourceRoot $fixture -TargetRoot (Join-Path $scratchRoot "incomplete")
+        }
+        catch {
+            if ($_.Exception.Message -ne "Required template content missing: $missing") { throw }
+            $missingFileRejected = $true
+        }
+        finally {
+            [IO.File]::WriteAllBytes($missingPath, $backup)
+        }
+        if (-not $missingFileRejected) { throw "Missing file was silently accepted: $missing" }
+        if (Test-Path -LiteralPath (Join-Path $scratchRoot "incomplete")) { throw "Incomplete content was copied before validation." }
     }
-    catch {
-        if ($_.Exception.Message -notlike '*Required template content missing: docs/assets/asset_manifest.xlsx*') { throw }
-        $missingFileRejected = $true
-    }
-    if (-not $missingFileRejected) { throw "Missing workbook was silently accepted." }
 
     foreach ($project in $ProjectPaths) {
         Assert-ProjectContent -Root $project
@@ -77,7 +103,7 @@ try {
 finally {
     if (Test-Path -LiteralPath $scratchRoot) {
         $resolvedScratch = (Resolve-Path -LiteralPath $scratchRoot).Path
-        $allowedPrefix = $repoRoot + "\.tmp\template-content-"
+        $allowedPrefix = Join-Path (Join-Path $repoRoot ".tmp") "template-content-"
         if (-not $resolvedScratch.StartsWith($allowedPrefix, [StringComparison]::OrdinalIgnoreCase)) {
             throw "Refusing to remove a directory outside the test workspace."
         }

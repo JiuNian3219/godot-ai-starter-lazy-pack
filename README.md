@@ -22,21 +22,21 @@ AI 必须能访问该仓库，或使用你已下载的本地仓库副本；没�
 
 AI 接到上面的指令后应执行：
 
-1. 使用已存在的本地仓库，或将仓库克隆到临时目录；不要把模板仓库直接当作新游戏目录。
-2. 优先下载本仓库 GitHub Release 中的含引擎 ZIP；只有使用源码仓库时，才运行 `scripts/build_lazy_pack.ps1 -IncludeGodot` 构建 ZIP。
-3. 将 ZIP 解压到临时目录，运行 `template/scripts/find_godot_candidates.ps1`。
-4. 展示所有 Godot 4.7.1 候选项的版本和绝对路径，等待用户确认。即使只有一个候选项也不得静默选择。
-5. 以确认路径作为 `-GodotBin` 运行 ZIP 根目录的 `install.ps1`。
-6. 进入新项目，在新的 PowerShell 进程中运行 `scripts/verify.ps1`。
-7. 检查 MCP、共享规则、Error 索引、Excel 资产台账和 `tools/godot-bin.path` 是否存在，并报告验证结果与仍需人工处理的事项。
+1. 使用已提供的源码版本或 ZIP。仓库链接则克隆到临时目录；用户指定提交时检出该提交。不要自动改用 latest Release，源码更新可能尚未发布。
+2. 源码直接运行 `scripts/find_godot_candidates.ps1`；已有 ZIP 则解压到临时目录，运行 `template/scripts/find_godot_candidates.ps1`。不要把模板仓库或解压目录当作游戏项目。
+3. 展示所有 Godot 4.7.1 候选项的版本和绝对路径，等待用户确认。即使只有一个候选项也不得静默选择。含引擎 ZIP 应选其包内引擎，安装器会将路径迁移到新项目。
+4. 源码运行 `scripts/create_new_project_from_template.ps1 -TargetPath <新目录> -GodotBin <确认路径>`；ZIP 运行包根目录的 `install.ps1`。只在用户明确选择某个 Release 时使用该发行版本，并报告版本来源。
+5. 进入新项目，在新的 PowerShell 进程中清除临时 `GODOT_BIN` 后运行 `scripts/verify.ps1`。
+6. 检查 MCP、共享规则、Error 索引、Excel 资产台账和 `tools/godot-bin.path`，并确认所用 AI 客户端实际加载了项目 AGENTS。Claude Code 旧版需先升级；不分发 CLAUDE.md，也不禁止用户自行添加。
 
 安装器会将确认后的 Godot 路径保存到被 Git 忽略的 `tools/godot-bin.path`，因此后续打开编辑器、运行游戏或验证不依赖临时环境变量。
 
 ## 包含内容
 
 - Godot 4.7.1 + typed GDScript 基础工程、示例场景和轻量行为测试。
-- `scripts/verify.ps1`：导入、语法检查、场景 smoke test、组件测试与依赖审计。
-- 场景节点持久化错误经验与示例契约测试，防止 AI 用运行时节点替代应在编辑器中维护的场景结构。
+- `scripts/verify.ps1`：导入、当前主场景启动冒烟、自动发现 `tests/**/*_test.gd` 与依赖审计。
+- `scripts/record_game.ps1`：调用 Godot 原生录制，输出可直接查看的 PNG 帧序列或 AVI，按需观察相机、动画和移动；不增加录屏依赖。
+- 场景节点持久化要求；重要游戏场景的结构测试随实际需求编写，不强制保留占位场景的 Title 节点。
 - GitHub Actions 持续验证、原型场景规范、`.editorconfig` 和 Excel 资产台账模板。
 - Git、Git LFS、作用域暂存和 Angular/Conventional Commits 规范。
 - `AGENTS.md`、按任务读取的 Error 索引、`.mcp.json` 与 Godot MCP addon。
@@ -51,6 +51,8 @@ AI 接到上面的指令后应执行：
 AGENTS 直接保留重要规则，特别要求玩法逻辑和执行顺序可读；Error 索引按任务关键词与操作命中。素材来源随变更登记到 XLSX，生成提示词记录可选。历史决策不作为新游戏项目文档复制。
 
 直接从源码创建新项目也使用相同清单：先发现并确认引擎，再运行 `scripts/create_new_project_from_template.ps1 -TargetPath <新目录> -GodotBin <确认路径>`。此流程只用于新项目，不迁移已有游戏。
+
+初始场景、主脚本和 HealthComponent 及其测试都是可替换示例。开发游戏时同步替换或删除对应测试；通用验证入口不固定这些路径，也不要求项目必须有示例组件。
 
 ## 打包与发布
 
@@ -70,7 +72,7 @@ powershell -ExecutionPolicy Bypass -File scripts\build_lazy_pack.ps1 -IncludeGod
 
 ## 持续验证
 
-`.github/workflows/verify.yml` 会在每次 push、Pull Request 或手动触发时下载官方 Linux Godot 4.7.1，并运行同一条 `scripts/verify.ps1`。新项目推送到 GitHub 后，确认仓库的 Actions 已启用，并将失败视为需要修复的验证结果。
+`.github/workflows/verify.yml` 会在每次 push、Pull Request 或手动触发时下载官方 Linux Godot 4.7.1，并运行同一条 `scripts/verify.ps1`。模板源码还运行验证器回归、行为验收工具自检、原生录制检查，以及 Windows 安装内容检查；这些维护脚本不安装到游戏项目，复制后的 CI 会跳过不存在的维护检查。录制检查在临时 CI 环境安装 Xvfb 和软件渲染依赖，不需要 AI 账号。新项目推送到 GitHub 后，确认仓库的 Actions 已启用，并将失败视为需要修复的验证结果。
 
 ## 不包含内容
 
@@ -85,6 +87,20 @@ powershell -ExecutionPolicy Bypass -File scripts\verify.ps1
 powershell -ExecutionPolicy Bypass -File scripts\build_lazy_pack.ps1 -IncludeGodot
 ```
 
-安装包维护时运行 `powershell -ExecutionPolicy Bypass -File scripts/test_template_content.ps1`，检查安装边界、必需文件和 Error 链接；可通过 `-ProjectPaths` 传入已安装项目检查文档一致性。此检查脚本不安装到游戏项目。
+安装包维护时运行 `powershell -ExecutionPolicy Bypass -File scripts/test_template_content.ps1`，检查安装边界、必需插件文件和 Error 链接；可通过 `-ProjectPaths` 传入已安装项目检查文档一致性。`scripts/test_verification.ps1` 用临时项目验证占位内容可替换、启动错误和新测试失败不会被漏过。这两个维护脚本不安装到游戏项目。
+
+有图形环境时运行 `scripts/test_recording.ps1`，检查真实 PNG 动画帧、AVI、已有产物保护与运行错误检测；录制使用方式见 [工程规范](docs/engineering_rules.md#运行画面录制)。
+
+## 懒人包的 AI 行为抽查
+
+`maintenance/behavior_cases.json` 保留相机、回合、结算与生成、普通小改动四个正常需求，以及独立验收要点。它们仅供维护懒人包，不复制到游戏项目。调整规则、工具入口或主要模型后，按需选取相关任务；不是每次游戏开发都要运行的流程。
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/prepare_behavior_case.ps1 -Case round -TargetPath .tmp/round-evaluation
+```
+
+准备器使用当前模板内容，生成新评估目录中的 `project/`、外部 `task.txt` 和 `baseline.json`；可通过 `-GodotBin` 指定已确认的引擎。让独立 AI 会话在 `project/` 中工作，只给它 `task.txt` 的正常需求，不提前给验收条件或参考解法。完成后另行查看实际改动、运行行为和读取记录，按维护侧条件验收；内部类名和路径不同不构成失败。可读性由人核对规则、计算、等待和状态变化是否容易理解，不能靠函数长度评分。做提示词对照时保持任务、模型和工具环境一致，只改变要研究的要求；有限样本仅说明本次观察。
+
+`scripts/test_behavior_checks.ps1` 自动检查四种工作区的准备和隔离，再验证参考回合的 28 项断言，确认删除等待、删除死亡后中止、忽略护盾的三个错误会被检出。参考样例不交给被测 AI；这项 CI 自检没有运行 AI，不能证明提示词有效。游戏项目自己的初始场景、脚本和测试仍可随需求替换。
 
 详细安装约束见 [docs/next_project_prompt.md](docs/next_project_prompt.md)。

@@ -1,4 +1,4 @@
-$ErrorActionPreference = "Stop"
+﻿$ErrorActionPreference = "Stop"
 
 $projectRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
 $godot = & (Join-Path $PSScriptRoot "resolve-godot.ps1")
@@ -36,29 +36,24 @@ Invoke-Godot --version
 Write-Host "Importing project assets..."
 Invoke-Godot --headless --path $projectRoot --import
 
-Write-Host "Checking main script syntax..."
-Invoke-Godot --headless --path $projectRoot --check-only --script res://scripts/main.gd
+# 使用项目当前配置的启动场景；退出由验证命令控制，不侵入游戏脚本。
+Write-Host "Checking current project startup (5 frames)..."
+Invoke-Godot --headless --path $projectRoot --quit-after 5
 
-Write-Host "Checking health component syntax..."
-Invoke-Godot --headless --path $projectRoot --check-only --script res://scripts/components/health_component.gd
-
-Write-Host "Checking smoke test syntax..."
-Invoke-Godot --headless --path $projectRoot --check-only --script res://tests/smoke_scene.gd
-
-Write-Host "Checking main scene contract syntax..."
-Invoke-Godot --headless --path $projectRoot --check-only --script res://tests/main_scene_contract.gd
-
-Write-Host "Checking health component test syntax..."
-Invoke-Godot --headless --path $projectRoot --check-only --script res://tests/health_component_test.gd
-
-Write-Host "Running smoke test..."
-Invoke-Godot --headless --path $projectRoot --script res://tests/smoke_scene.gd
-
-Write-Host "Running main scene contract..."
-Invoke-Godot --headless --path $projectRoot --script res://tests/main_scene_contract.gd
-
-Write-Host "Running health component test..."
-Invoke-Godot --headless --path $projectRoot --script res://tests/health_component_test.gd
+# 示例可随项目替换；仅运行当前存在的轻量 SceneTree 行为测试。
+$testRoot = Join-Path $projectRoot "tests"
+$projectTests = @()
+if (Test-Path -LiteralPath $testRoot) {
+    $projectTests = @(Get-ChildItem -LiteralPath $testRoot -Recurse -File -Filter "*_test.gd" | Sort-Object FullName)
+}
+if ($projectTests.Count -eq 0) {
+    Write-Host "No project behavior tests found (tests/**/*_test.gd). Startup and dependency checks still run."
+}
+foreach ($test in $projectTests) {
+    $testPath = "res://" + $test.FullName.Substring($projectRoot.Path.Length + 1).Replace("\", "/")
+    Write-Host "Running project test:" $testPath
+    Invoke-Godot --headless --path $projectRoot --script $testPath
+}
 
 Write-Host "Auditing architecture dependencies..."
 $powerShellExecutable = if ($PSVersionTable.PSEdition -eq "Desktop") {

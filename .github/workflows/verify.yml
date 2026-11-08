@@ -33,3 +33,33 @@ jobs:
       - name: Verify project
         shell: pwsh
         run: ./scripts/verify.ps1
+
+      - name: Test template verification behavior
+        if: ${{ hashFiles('scripts/test_verification.ps1') != '' }}
+        shell: pwsh
+        run: ./scripts/test_verification.ps1
+
+      - name: Test behavior evaluation tools and reference checks
+        if: ${{ hashFiles('scripts/test_behavior_checks.ps1') != '' }}
+        shell: pwsh
+        run: ./scripts/test_behavior_checks.ps1
+
+      - name: Test native recording with a virtual display
+        if: ${{ hashFiles('scripts/test_recording.ps1') != '' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y xvfb libgl1-mesa-dri
+          xvfb-run -a pwsh -NoProfile -File scripts/test_recording.ps1
+
+  template-content:
+    runs-on: windows-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Check template installation content
+        if: ${{ hashFiles('scripts/test_template_content.ps1') != '' }}
+        shell: pwsh
+        run: ./scripts/test_template_content.ps1

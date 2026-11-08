@@ -1,0 +1,152 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/gameplay/round_battle_prototype.gd" id="1_battle"]
+
+[node name="RoundBattlePrototype" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_battle")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.07, 0.09, 0.13, 1)
+
+[node name="Title" type="Label" parent="."]
+offset_left = 32.0
+offset_top = 24.0
+offset_right = 928.0
+offset_bottom = 64.0
+theme_override_font_sizes/font_size = 30
+text = "回合战斗原型"
+
+[node name="Rules" type="Label" parent="."]
+offset_left = 32.0
+offset_top = 74.0
+offset_right = 928.0
+offset_bottom = 114.0
+theme_override_font_sizes/font_size = 18
+text = "角色 1 → 角色 2，每次行动等待 0.2 秒；伤害 = max(1, 攻击 − 防御)，先扣护盾。"
+
+[node name="FirstAlly" type="ColorRect" parent="."]
+offset_left = 32.0
+offset_top = 136.0
+offset_right = 308.0
+offset_bottom = 302.0
+mouse_filter = 2
+color = Color(0.14, 0.3, 0.43, 1)
+
+[node name="Name" type="Label" parent="FirstAlly"]
+offset_left = 18.0
+offset_top = 16.0
+offset_right = 258.0
+offset_bottom = 46.0
+theme_override_font_sizes/font_size = 24
+text = "我方 · 角色 1"
+
+[node name="Stats" type="Label" parent="FirstAlly"]
+offset_left = 18.0
+offset_top = 62.0
+offset_right = 258.0
+offset_bottom = 92.0
+theme_override_font_sizes/font_size = 20
+text = "攻击 8"
+
+[node name="Action" type="Label" parent="FirstAlly"]
+offset_left = 18.0
+offset_top = 112.0
+offset_right = 258.0
+offset_bottom = 148.0
+theme_override_font_sizes/font_size = 18
+text = "等待行动"
+
+[node name="SecondAlly" type="ColorRect" parent="."]
+offset_left = 324.0
+offset_top = 136.0
+offset_right = 600.0
+offset_bottom = 302.0
+mouse_filter = 2
+color = Color(0.15, 0.34, 0.3, 1)
+
+[node name="Name" type="Label" parent="SecondAlly"]
+offset_left = 18.0
+offset_top = 16.0
+offset_right = 258.0
+offset_bottom = 46.0
+theme_override_font_sizes/font_size = 24
+text = "我方 · 角色 2"
+
+[node name="Stats" type="Label" parent="SecondAlly"]
+offset_left = 18.0
+offset_top = 62.0
+offset_right = 258.0
+offset_bottom = 92.0
+theme_override_font_sizes/font_size = 20
+text = "攻击 6"
+
+[node name="Action" type="Label" parent="SecondAlly"]
+offset_left = 18.0
+offset_top = 112.0
+offset_right = 258.0
+offset_bottom = 148.0
+theme_override_font_sizes/font_size = 18
+text = "等待行动"
+
+[node name="Enemy" type="ColorRect" parent="."]
+offset_left = 652.0
+offset_top = 136.0
+offset_right = 928.0
+offset_bottom = 302.0
+mouse_filter = 2
+color = Color(0.39, 0.2, 0.23, 1)
+
+[node name="Name" type="Label" parent="Enemy"]
+offset_left = 18.0
+offset_top = 16.0
+offset_right = 258.0
+offset_bottom = 46.0
+theme_override_font_sizes/font_size = 24
+text = "敌方 · 敌人"
+
+[node name="Stats" type="Label" parent="Enemy"]
+offset_left = 18.0
+offset_top = 66.0
+offset_right = 258.0
+offset_bottom = 140.0
+theme_override_font_sizes/font_size = 20
+text = "生命 9    护盾 4\n防御 3"
+
+[node name="RoundStatus" type="Label" parent="."]
+offset_left = 32.0
+offset_top = 320.0
+offset_right = 928.0
+offset_bottom = 356.0
+theme_override_font_sizes/font_size = 22
+text = "准备就绪 · 点击按钮开始一回合"
+
+[node name="BattleLog" type="Label" parent="."]
+offset_left = 32.0
+offset_top = 364.0
+offset_right = 928.0
+offset_bottom = 438.0
+theme_override_font_sizes/font_size = 20
+text = "结算记录将在这里显示。"
+
+[node name="StartRound" type="Button" parent="."]
+offset_left = 32.0
+offset_top = 462.0
+offset_right = 272.0
+offset_bottom = 510.0
+theme_override_font_sizes/font_size = 22
+text = "开始一回合"
+
+[connection signal="pressed" from="StartRound" to="." method="start_round"]

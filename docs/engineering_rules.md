@@ -6,7 +6,7 @@
 
 ## 1. 架构边界
 
-每个功能开始前先回答：
+AI 在涉及新增或调整结构时自行判断以下问题；已由代码或 Plan 明确的直接沿用，只向用户说明影响结果或需要取舍的结论，不逐项汇报：
 
 1. 新文件属于哪个模块？
 2. 它允许依赖哪些目录？
@@ -112,7 +112,28 @@ func spawn_goblin(parent: Node2D, spawn_position: Vector2) -> Node2D:
 
 `scripts/verify.ps1` 必须能失败，不允许只打印错误后继续成功。
 
-纯逻辑采用可重复、确定性的脚本级测试；场景加载、导入或启动变化补相应冒烟测试。新增游戏检查接入 `scripts/verify.ps1`，维持一个验证入口。优先轻量测试，已有复杂系统和回归需求足以证明收益时再引入 gdUnit4。
+`scripts/verify.ps1` 检查导入、当前配置的启动场景和依赖，并自动运行 `tests/` 下的 `*_test.gd`。这些轻量 SceneTree 测试自行结束，失败必须非零退出；辅助脚本不使用该命名。没有行为测试时会明确报告，启动冒烟只覆盖最初几帧，不能证明玩法完整正确。
+
+初始场景、主脚本和 HealthComponent 是可替换示例；替换或删除示例时同步调整对应测试，不为通过验证保留旧路径、Title 节点或旧组件。测试断言应对应当前游戏需求。纯逻辑采用确定性测试，重要场景检查实际需要的持久结构。优先轻量测试，已有复杂系统和回归需求足以证明收益时再引入 gdUnit4。
+
+### 运行画面录制
+
+需要检查相机、动画、移动等随时间变化的画面时，调用 Godot 原生 Movie Maker：
+
+```powershell
+# 当前主场景，默认 90 帧 / 30 FPS；输出 PNG 序列，AI 可直接读取图片。
+powershell -ExecutionPolicy Bypass -File scripts/record_game.ps1
+# 指定场景，录制 6 秒游戏时间；场景路径换成项目实际路径。
+powershell -ExecutionPolicy Bypass -File scripts/record_game.ps1 -Scene res://scenes/main.tscn -Frames 180 -Fps 30
+# 需要视频文件时使用 AVI；相对输出路径以项目根目录为准。
+powershell -ExecutionPolicy Bypass -File scripts/record_game.ps1 -OutputFile .tmp/recordings/preview.avi
+```
+
+默认产物位于独立的 `.tmp/recordings/` 子目录，命令打印首、中、尾帧路径。按待验证的动作查看相应帧，必要时查看相邻帧或查询运行状态；不能只生成文件就报告验证通过。命令会打开游戏窗口，需要图形环境；不要给录制进程加 `--headless`。文件已存在时拒绝覆盖，换新路径即可。
+
+录制默认只启动场景，不自动点击按钮或移动角色。这是同步的离线录制，可能在 AI 下次工具调用前就已结束；需要交互时，优先在启动前准备临时测试场景来驱动本次动作。只有确认运行时工具已连接到这次录制且进程仍在运行时，才通过外部输入控制它；不要给正式玩法添加录制专用分支。录制按固定帧率推进游戏时间，适合观察视觉顺序，不能证明真实帧率、卡顿或输入延迟；精确等待、结算和提前结束仍用行为断言检查。已查看相关现象且对应验证通过后即可结束，不要求每次修改全面录制。
+
+原生接口与限制见 [Godot 4.7 Movie Maker 文档](https://docs.godotengine.org/en/4.7/tutorials/animation/creating_movies.html)。
 
 ## 6. 资源与体积
 

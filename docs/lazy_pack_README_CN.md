@@ -6,6 +6,8 @@
 
 准备 Git、Git LFS、Node.js/npm/npx。含引擎 ZIP 携带 Windows x64 Godot 4.7.1；轻量 ZIP 使用本机兼容引擎。Claude Code 可选，也可使用其他支持 AGENTS 的 AI 工具。
 
+使用已提供的这个包及其 INSTALL.md，不自动换成其他 Release。使用 Claude Code 时，确认版本支持直接读取 AGENTS，并在会话中核对实际已加载的项目规则；旧版先升级。不分发 CLAUDE.md，也不禁止用户自行添加。
+
 解压后，在包目录运行：
 
 ```powershell
@@ -37,5 +39,7 @@ AI 代码变更验证通过后默认提交本次相关文件，除非用户禁�
 ## 包含与边界
 
 开发项目获得规则、错误索引、资产台账、Godot MCP、示例场景、测试和验证脚本。完整清单见外层 TEMPLATE_MANIFEST.md。安装说明和维护资料留在包外层，不带入游戏项目。
+
+初始场景、脚本及对应测试只是可替换示例。验证入口启动当前主场景，并自动运行 `tests/**/*_test.gd`；无需保留模板的 Title 节点或旧场景路径。
 
 源码构建方式见仓库 README。引擎二进制、`.godot/`、`.tmp/`、本地路径配置、构建和导出文件不提交。
