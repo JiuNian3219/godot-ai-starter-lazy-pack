@@ -22,11 +22,11 @@ powershell -ExecutionPolicy Bypass -File .\install.ps1 -TargetPath "C:\path\to\n
 项目名可省略，此时取目标目录名。只用于新项目，不用重新安装覆盖已有游戏。必须使用确认后的绝对路径，不用 `-SkipVerify` 伪造成功；缺依赖或验证失败时报告实际问题。
 
 5. 在新项目目录启动新的 PowerShell 进程，清除该进程的临时 `GODOT_BIN` 后运行 `scripts/verify.ps1`，确认引擎路径由被 Git 忽略的 `tools/godot-bin.path` 持久保存。含引擎安装应指向新项目内复制的引擎，而非临时解压目录。
-6. 检查新项目有 `AGENTS.md`、四份专项规则、`docs/errors/index.md` 与七条有效链接、`docs/assets/asset_manifest.xlsx`、`.mcp.json`、完整 Godot MCP addon、验证脚本和示例测试。开发内容以源码 `scripts/copy_template.ps1` 或 ZIP 外层 `copy_template.ps1` 为准。确认所用客户端实际已加载项目 AGENTS；使用 Claude 时可通过 `/context` 查看，若未加载则检查版本、上级目录指令文件和客户端设置。不能仅凭文件存在报告规则就绪。
-7. 检查安装说明、包维护资料、工具专用技能、自动记忆和交接文件没有进入新项目。不要生成游戏策划、总结或新经验文档。
+6. 检查新项目有 `AGENTS.md`、`docs/项目说明.md` 占位、四份专项规则、`docs/errors/index.md` 与七条有效链接、`docs/assets/asset_manifest.xlsx`、`.mcp.json`、完整 Godot MCP addon、验证脚本和示例测试。开发内容以源码 `scripts/copy_template.ps1` 或 ZIP 外层 `copy_template.ps1` 为准。确认所用客户端实际已加载项目 AGENTS；使用 Claude 时可通过 `/context` 查看，若未加载则检查版本、上级目录指令文件和客户端设置。不能仅凭文件存在报告规则就绪。
+7. 检查安装说明、包维护资料、工具专用技能、自动记忆和交接文件没有进入新项目。保留随模板复制的项目说明占位，不自行填写游戏策划、总结或新经验文档。
 
 ## 安装报告
 
-在聊天中报告源码提交或 ZIP 版本来源、依赖版本、用户确认的引擎路径、实际保存的引擎路径、新项目路径、验证结果、开发内容与规则装载检查结果及待人工处理事项。不把本报告写入新项目。
+在聊天中报告源码提交或 ZIP 版本来源、依赖版本、用户确认的引擎路径、实际保存的引擎路径、新项目路径、验证结果、开发内容与规则装载检查结果及待人工处理事项，并告诉用户自己的文档入口是新项目的 `docs/项目说明.md`。不把本报告写入新项目。
 
-安装后用户直接描述开发任务。AI 读取 AGENTS 和 Error 索引，按命中范围查阅记录及专项规则；不需要复制额外日常提示词。
+安装后用户直接描述开发任务。AI 按 AGENTS 读取项目说明和 Error 索引，按任务查阅相关资料及专项规则；不需要复制额外日常提示词。

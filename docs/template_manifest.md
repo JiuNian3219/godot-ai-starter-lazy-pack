@@ -6,6 +6,7 @@
 
 - Godot 4.7.1 GDScript 工程、可替换的占位场景、HealthComponent 及其示例行为测试。
 - `AGENTS.md`：关键规则、玩法可读性、验证和提交要求，以及按需读取入口。
+- `docs/项目说明.md`：用户文档入口，预留填写提示，由用户主导填写或链接已有资料；AI 按 AGENTS 在任务中读取和使用。
 - 四份专项规则：工程、架构、游戏开发和原型场景。
 - `docs/errors/index.md` 及七条错误经验；根据任务关键词和操作命中后读取，不自动写入新经验。
 - `docs/assets/asset_manifest.xlsx`：单表资产台账。素材变更同步登记，提示词记录可选。

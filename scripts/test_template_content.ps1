@@ -13,6 +13,7 @@ function Assert-ProjectContent {
 
     foreach ($required in @(
         "AGENTS.md", ".mcp.json", "project.godot", "scripts/verify.ps1", "scripts/record_game.ps1", "docs/assets/asset_manifest.xlsx", "docs/errors/index.md",
+        "docs/项目说明.md",
         "addons/godot_mcp/plugin.cfg", "addons/godot_mcp/plugin.gd", "addons/godot_mcp/mcp_client.gd",
         "addons/godot_mcp/tool_executor.gd", "addons/godot_mcp/runtime/mcp_runtime.gd",
         "addons/godot_mcp/tools/file_tools.gd", "addons/godot_mcp/tools/scene_tools.gd",
@@ -65,7 +66,7 @@ try {
     Assert-ProjectContent -Root $target
 
     # 每轮恢复源文件，分别验证台账、插件入口和依赖缺失，并确保失败发生在复制前。
-    foreach ($missing in @("docs/assets/asset_manifest.xlsx", "scripts/record_game.ps1", "addons/godot_mcp/plugin.cfg", "addons/godot_mcp/plugin.gd", "addons/godot_mcp/utils/paths.gd", "addons/godot_mcp/runtime/mcp_runtime.gd")) {
+    foreach ($missing in @("docs/项目说明.md", "docs/assets/asset_manifest.xlsx", "scripts/record_game.ps1", "addons/godot_mcp/plugin.cfg", "addons/godot_mcp/plugin.gd", "addons/godot_mcp/utils/paths.gd", "addons/godot_mcp/runtime/mcp_runtime.gd")) {
         $missingPath = Join-Path $fixture $missing
         $backup = [IO.File]::ReadAllBytes($missingPath)
         Remove-Item -LiteralPath $missingPath

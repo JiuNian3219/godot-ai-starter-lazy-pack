@@ -33,7 +33,7 @@ AI 必须能访问该仓库，或使用你已下载的本地仓库副本；没�
 - GitHub Actions 持续验证、原型场景规范、`.editorconfig` 和 Excel 资产台账模板。
 - Git、Git LFS、作用域暂存和 Angular/Conventional Commits 规范。
 - `AGENTS.md`、按任务读取的 Error 索引、`.mcp.json` 与 Godot MCP addon。
-- 中文安装说明；开发时直接描述任务，项目文档由用户主导整理。
+- 中文安装说明；开发时直接描述任务，你的游戏文档放在 [docs/项目说明.md](docs/项目说明.md)，由你主导填写或链接已有资料；AI 按 AGENTS 在任务中读取和使用。
 - 架构、资源体积/未来分包、性能、输入、UI、存档与游戏专项规范。
 - 基础设施、普通功能、垂直切片三阶段的验证和试玩门槛。
 

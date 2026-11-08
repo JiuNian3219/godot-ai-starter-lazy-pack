@@ -18,6 +18,7 @@ $projectItems = @(
     ".editorconfig", ".gitattributes", ".gitignore", ".mcp.json", "AGENTS.md", "project.godot",
     "docs/engineering_rules.md", "docs/game_development_rules.md",
     "docs/architecture_rules.md", "docs/prototype_scene_rules.md",
+    "docs/项目说明.md",
     "docs/assets/asset_manifest.xlsx", "docs/errors/index.md",
     "docs/errors/0001-verification-must-fail-hard.md",
     "docs/errors/0002-godot-signal-tests-need-stable-counters.md",
