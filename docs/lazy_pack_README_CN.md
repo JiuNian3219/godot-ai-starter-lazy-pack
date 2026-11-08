@@ -4,29 +4,9 @@
 
 ## 创建新项目
 
-准备 Git、Git LFS、Node.js/npm/npx。含引擎 ZIP 携带 Windows x64 Godot 4.7.1；轻量 ZIP 使用本机兼容引擎。Claude Code 可选，也可使用其他支持 AGENTS 的 AI 工具。
+把本安装包和目标目录交给 AI，让它完整阅读并执行包根目录的 `INSTALL.md`。该文件由源码 `docs/next_project_prompt.md` 直接复制，包含依赖检查、引擎确认、安装和验证的完整步骤。
 
-使用已提供的这个包及其 INSTALL.md，不自动换成其他 Release。使用 Claude Code 时，确认版本支持直接读取 AGENTS，并在会话中核对实际已加载的项目规则；旧版先升级。不分发 CLAUDE.md，也不禁止用户自行添加。
-
-解压后，在包目录运行：
-
-```powershell
-powershell -ExecutionPolicy Bypass -File .\template\scripts\find_godot_candidates.ps1
-```
-
-让 AI 展示候选版本与绝对路径，用户确认后再运行：
-
-```powershell
-powershell -ExecutionPolicy Bypass -File .\install.ps1 -TargetPath "C:\path\to\new-game" -ProjectName "New Game" -GodotBin "C:\confirmed\Godot_v4.7.1-stable_win64_console.exe"
-```
-
-安装器复制明确选择的开发内容，初始化 Git/LFS 并验证。确认后的路径存入被 Git 忽略的 `tools/godot-bin.path`。安装后在新项目的新终端运行：
-
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts\verify.ps1
-```
-
-只用于创建新项目，不用此安装流程覆盖已有项目。不要通过跳过验证报告安装成功。
+使用已提供的包，不自动换成其他 Release。含引擎 ZIP 携带 Windows x64 Godot 4.7.1；轻量 ZIP 使用本机兼容引擎。安装只用于创建新项目，不覆盖已有游戏。
 
 ## 开发时怎么用
 

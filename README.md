@@ -13,23 +13,16 @@ https://github.com/JiuNian3219/godot-ai-starter-lazy-pack
 目标目录：<例如 D:\Study\Godot\MyGame>
 项目名：<可选，例如 My Game>
 
-请先完整阅读仓库根目录 README.md 和 docs/next_project_prompt.md，然后严格执行其中的安装流程。不要手写或重新生成模板文件。
+请完整阅读并执行 docs/next_project_prompt.md 中的安装步骤。不要手写或重新生成模板文件。
 ```
 
 AI 必须能访问该仓库，或使用你已下载的本地仓库副本；没有访问权限时，它应说明阻塞原因，而不是从其他来源拼凑模板。
 
-## AI 安装流程
+## 安装入口
 
-AI 接到上面的指令后应执行：
+完整安装步骤统一维护在 [安装说明](docs/next_project_prompt.md)；打包时直接复制为 ZIP 根目录的 `INSTALL.md`。
 
-1. 使用已提供的源码版本或 ZIP。仓库链接则克隆到临时目录；用户指定提交时检出该提交。不要自动改用 latest Release，源码更新可能尚未发布。
-2. 源码直接运行 `scripts/find_godot_candidates.ps1`；已有 ZIP 则解压到临时目录，运行 `template/scripts/find_godot_candidates.ps1`。不要把模板仓库或解压目录当作游戏项目。
-3. 展示所有 Godot 4.7.1 候选项的版本和绝对路径，等待用户确认。即使只有一个候选项也不得静默选择。含引擎 ZIP 应选其包内引擎，安装器会将路径迁移到新项目。
-4. 源码运行 `scripts/create_new_project_from_template.ps1 -TargetPath <新目录> -GodotBin <确认路径>`；ZIP 运行包根目录的 `install.ps1`。只在用户明确选择某个 Release 时使用该发行版本，并报告版本来源。
-5. 进入新项目，在新的 PowerShell 进程中清除临时 `GODOT_BIN` 后运行 `scripts/verify.ps1`。
-6. 检查 MCP、共享规则、Error 索引、Excel 资产台账和 `tools/godot-bin.path`，并确认所用 AI 客户端实际加载了项目 AGENTS。Claude Code 旧版需先升级；不分发 CLAUDE.md，也不禁止用户自行添加。
-
-安装器会将确认后的 Godot 路径保存到被 Git 忽略的 `tools/godot-bin.path`，因此后续打开编辑器、运行游戏或验证不依赖临时环境变量。
+提供仓库链接时，从源码直接创建新项目，无需先打包；已有安装 ZIP 时按包内 `INSTALL.md` 安装。只有用户明确选择 Release 才下载对应发行版，避免用旧发行包替代已更新的源码。
 
 ## 包含内容
 
@@ -50,13 +43,13 @@ AI 接到上面的指令后应执行：
 
 AGENTS 直接保留重要规则，特别要求玩法逻辑和执行顺序可读；Error 索引按任务关键词与操作命中。素材来源随变更登记到 XLSX，生成提示词记录可选。历史决策不作为新游戏项目文档复制。
 
-直接从源码创建新项目也使用相同清单：先发现并确认引擎，再运行 `scripts/create_new_project_from_template.ps1 -TargetPath <新目录> -GodotBin <确认路径>`。此流程只用于新项目，不迁移已有游戏。
+源码和 ZIP 安装使用相同的开发内容清单；只用于新项目，不迁移已有游戏。
 
 初始场景、主脚本和 HealthComponent 及其测试都是可替换示例。开发游戏时同步替换或删除对应测试；通用验证入口不固定这些路径，也不要求项目必须有示例组件。
 
 ## 打包与发布
 
-默认构建轻量包，不含引擎：
+以下命令用于制作分发包；从源码安装无需先打包。默认构建轻量包，不含引擎：
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File scripts\build_lazy_pack.ps1
@@ -102,5 +95,3 @@ powershell -ExecutionPolicy Bypass -File scripts/prepare_behavior_case.ps1 -Case
 准备器使用当前模板内容，生成新评估目录中的 `project/`、外部 `task.txt` 和 `baseline.json`；可通过 `-GodotBin` 指定已确认的引擎。让独立 AI 会话在 `project/` 中工作，只给它 `task.txt` 的正常需求，不提前给验收条件或参考解法。完成后另行查看实际改动、运行行为和读取记录，按维护侧条件验收；内部类名和路径不同不构成失败。可读性由人核对规则、计算、等待和状态变化是否容易理解，不能靠函数长度评分。做提示词对照时保持任务、模型和工具环境一致，只改变要研究的要求；有限样本仅说明本次观察。
 
 `scripts/test_behavior_checks.ps1` 自动检查四种工作区的准备和隔离，再验证参考回合的 28 项断言，确认删除等待、删除死亡后中止、忽略护盾的三个错误会被检出。参考样例不交给被测 AI；这项 CI 自检没有运行 AI，不能证明提示词有效。游戏项目自己的初始场景、脚本和测试仍可随需求替换。
-
-详细安装约束见 [docs/next_project_prompt.md](docs/next_project_prompt.md)。

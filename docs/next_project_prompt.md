@@ -4,8 +4,8 @@
 
 ## 安装步骤
 
-1. 确认 Git、Git LFS、Node.js、npm、npx 可用，报告版本。Claude Code 可选，缺少它不阻塞安装；可用支持 AGENTS 的其他 AI 入口。使用 Claude 时确认客户端支持直接读取 AGENTS，旧版先升级；不为兼容旧版另外生成 CLAUDE.md。不安装未知技能，不默认跳过权限检查，不要求 Codex CLI。
-2. 使用已提供的源码版本或 ZIP，不自动换成 latest Release。仓库链接先克隆；指定提交先检出。源码默认直接创建项目，需要分发安装包时才构建 ZIP。用户明确选择 Release 时才下载对应版本，报告提交或发行来源。
+1. 确认 Git、Git LFS、Node.js、npm、npx 可用，报告版本。Claude Code 可选，缺少它不阻塞安装；可用支持 AGENTS 的其他 AI 入口。使用 Claude 时确认客户端支持直接读取 AGENTS，旧版先升级；不分发或为兼容旧版另外生成 CLAUDE.md，也不禁止用户自行添加。不安装未知技能，不默认跳过权限检查，不要求 Codex CLI。
+2. 使用已提供的源码版本或 ZIP，不自动换成 latest Release。仓库链接先克隆到临时目录；指定提交先检出。源码默认直接创建项目，需要分发安装包时才构建 ZIP。用户明确选择 Release 时才下载对应版本，报告提交或发行来源。不要把模板仓库或临时解压目录当作游戏项目。
 3. 源码运行 `scripts/find_godot_candidates.ps1`；已有 ZIP 解压到临时目录，运行 `template/scripts/find_godot_candidates.ps1`。列出 Godot 4.7.1 候选的版本和绝对路径，即使只有一个也先让用户确认；找不到才请用户提供路径。含引擎 ZIP 选择包内引擎，使安装后路径指向新项目内副本。
 4. 用户确认后，源码在仓库根目录运行，替换占位路径：
 
